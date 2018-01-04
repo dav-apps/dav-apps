@@ -26,6 +26,13 @@ gem 'turbolinks', '~> 5'
 gem 'bootstrap', '~> 4.0.0.beta3'
 gem 'jquery-rails'
 
+# dav gem
+gem 'dav', github: 'Dav2070/dav-gem'
+
+# Session store for storing sessions in DB
+gem 'activerecord-session_store'
+gem 'whenever'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
