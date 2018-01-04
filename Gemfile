@@ -29,7 +29,6 @@ gem 'dav', github: 'Dav2070/dav-gem'
 
 # Session store for storing sessions in DB
 gem 'activerecord-session_store'
-gem 'whenever'
 
 group :development, :test do
 	# Call 'byebug' anywhere in the code to stop execution and get a debugger console
