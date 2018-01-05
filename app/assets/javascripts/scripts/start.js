@@ -1,5 +1,6 @@
-$(function() {
+$(function(){
    arrangeElements();
+
 	$(window).resize(function() {
       arrangeElements();
    });
