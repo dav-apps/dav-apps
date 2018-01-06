@@ -1,3 +1,6 @@
 Rails.application.routes.draw do
-  root 'starts#index'
+  	root 'starts#index'
+
+	# UsersController
+	get 'login', to: 'users#login'
 end
