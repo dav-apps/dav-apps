@@ -23,6 +23,7 @@ gem 'turbolinks', '~> 5'
 # Bootstrap and Jquery
 gem 'bootstrap', '~> 4.0.0.beta3'
 gem 'jquery-rails'
+gem 'sprockets'
 
 # dav gem
 gem 'dav', github: 'Dav2070/dav-gem'

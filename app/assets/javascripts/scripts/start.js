@@ -11,8 +11,6 @@ function arrangeElements(){
    var height = $(window).height();
    var width = $(window).width();
 
-   console.log(width);
-
    $("#start-section-1").height(height);
    $("#start-text-1").css("margin-top", height/3.5);
    $("#image-zeichnung").height($("#start-section-2").height/2);
