@@ -8,7 +8,9 @@ $(function(){
 function navbarCollapse(){
    if ($("#mainNav").offset().top > 100) {
       $("#mainNav").css("background-color", "rgba(255, 255, 255, 0.87)");
+      //$(".navigation-text").css("background-color", "rgba(255, 255, 255, 0.87)");
    } else {
       $("#mainNav").css("background-color", "transparent");
+      //$(".navigation-text").css("background-color", "transparent");
    }
 };

@@ -1,3 +1,5 @@
+$navbar-background-color: rgba(255, 255, 255, 0.87);
+
 #navbar-brand{
    color:black;
    font-size:35px;
@@ -5,7 +7,8 @@
 }
 
 .navbar{
-   margin-top: -15px;
+   margin-top: -8px;
+   height: 67px;
 }
 
 .navbar-nav>li>a {
@@ -26,4 +29,8 @@
    -moz-transition:background 0.3s;
    -o-transition:background 0.3s;
    transition:background 0.3s;
+}
+
+.collapsing, .collapse.show{
+   background-color: $navbar-background-color;
 }
