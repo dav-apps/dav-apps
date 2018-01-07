@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 	# UsersController
 	get 'login', to: 'users#login'
 	post 'login', to: 'users#login_action'
-	delete 'logout', to: 'users#logout'
+	get 'logout', to: 'users#logout'
 	get 'signup', to: 'users#signup'
 	post 'signup', to: 'users#signup_action'
 end

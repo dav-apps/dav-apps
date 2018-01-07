@@ -8,14 +8,28 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
          <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-               <%= link_to "Apps", root_path, class: "nav-link navigation-text" %>
+               <%= link_to "All Apps", root_path, class: "nav-link navigation-text" %>
             </li>
+            <% if session[:jwt] %>
+
+            <!-- Logged in -->
+            <li class="nav-item">
+               <%= link_to session[:username], root_path, class: "nav-link navigation-text" %>
+            </li>
+            <li class="nav-item">
+               <%= link_to "Log out", logout_path, class: "nav-link navigation-text" %>
+            </li>
+
+            <% else %>
+
+            <!-- Not Logged in -->
             <li class="nav-item">
                <%= link_to "Log in", login_path, class: "nav-link navigation-text" %>
             </li>
             <li class="nav-item">
                <%= link_to "Sign up", signup_path, class: "nav-link navigation-text" %>
             </li>
+            <% end %>
          </ul>
       </div>
    </div>

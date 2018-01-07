@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-   #before_action :create_auth_object, only: [:login_action, :signup_action]
 
    def login
       
@@ -13,7 +12,7 @@ class UsersController < ApplicationController
       begin
          user = auth.login(email, password)
          session[:jwt] = user.jwt
-         puts user.jwt
+         session[:username] = user.username
 
          redirect_to root_path
       rescue StandardError => e
@@ -23,7 +22,9 @@ class UsersController < ApplicationController
    end
 
    def logout
-      session[:jwt] = "";
+      session[:jwt] = nil;
+      flash[:success] = "You are now logged out. Have a nice day :)"
+      redirect_to root_path
    end
 
    def signup
