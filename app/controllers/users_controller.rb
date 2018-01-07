@@ -53,12 +53,4 @@ class UsersController < ApplicationController
          render 'signup'
       end
    end
-
-   private
-   def get_auth_object
-      Dav::Auth.new(api_key: ENV["DAV_API_KEY"], 
-                           secret_key: ENV["DAV_SECRET_KEY"],
-                           uuid: ENV["DAV_UUID"],
-                           environment: Rails.env)
-   end
 end

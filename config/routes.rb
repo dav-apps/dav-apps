@@ -7,4 +7,7 @@ Rails.application.routes.draw do
 	get 'logout', to: 'users#logout'
 	get 'signup', to: 'users#signup'
 	post 'signup', to: 'users#signup_action'
+
+	# AppsController
+	get 'apps', to: 'apps#index'
 end

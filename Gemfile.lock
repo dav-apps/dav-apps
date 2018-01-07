@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Dav2070/dav-gem.git
-  revision: fb3c20d497553b2ff0acb1060f7f7f32682a7c13
+  revision: 4e77c4832fd7aa265f3f57438f4050ea04b21177
   specs:
     dav (0.1.1)
 
@@ -148,7 +148,7 @@ GEM
       ffi (>= 0.5.0, < 2)
     ruby_dep (1.5.0)
     rubyzip (1.2.1)
-    sass (3.5.4)
+    sass (3.5.5)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -183,7 +183,7 @@ GEM
     turbolinks-source (5.0.3)
     tzinfo (1.2.4)
       thread_safe (~> 0.1)
-    uglifier (4.1.2)
+    uglifier (4.1.3)
       execjs (>= 0.3.0, < 3)
     web-console (3.5.1)
       actionview (>= 5.0)
