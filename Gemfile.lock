@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/Dav2070/dav-gem.git
-  revision: fb3c20d497553b2ff0acb1060f7f7f32682a7c13
+  revision: 43a270aa76be660c9815f0f581648b0a08b832b7
   specs:
-    dav (0.1.1)
+    dav (0.1.2)
 
 GEM
   remote: https://rubygems.org/
@@ -80,6 +80,10 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
+    dotenv (2.2.1)
+    dotenv-rails (2.2.1)
+      dotenv (= 2.2.1)
+      railties (>= 3.2, < 5.2)
     erubi (1.7.0)
     execjs (2.7.0)
     ffi (1.9.18)
@@ -144,7 +148,7 @@ GEM
       ffi (>= 0.5.0, < 2)
     ruby_dep (1.5.0)
     rubyzip (1.2.1)
-    sass (3.5.4)
+    sass (3.5.5)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -179,7 +183,7 @@ GEM
     turbolinks-source (5.0.3)
     tzinfo (1.2.4)
       thread_safe (~> 0.1)
-    uglifier (4.1.2)
+    uglifier (4.1.3)
       execjs (>= 0.3.0, < 3)
     web-console (3.5.1)
       actionview (>= 5.0)
@@ -202,6 +206,7 @@ DEPENDENCIES
   capybara (~> 2.13)
   coffee-rails (~> 4.2)
   dav!
+  dotenv-rails
   jquery-rails
   listen (>= 3.0.5, < 3.2)
   pg

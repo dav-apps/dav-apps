@@ -1,6 +1,25 @@
+<% if session[:jwt] %>
+
+<%= render 'layouts/messages' %>
+
+<div class="container content">
+	<h1 align="center">Your apps</h1>
+
+	<div class="card-group mt-4">
+		<% @user.apps.each do |app| %>
+			<%= render 'shared/app-card', app: app %>
+		<% end %>
+   </div>
+</div>
+
+<% else %>
+
 <div class="container-fluid" id="start-section-1">
-	<div>
-		<div class="content row">
+	<div class="content">
+
+		<%= render 'layouts/messages' %>
+		
+		<div class="row">
 			<div class="col-12 offset-1 col-md-8 offset-md-3 col-sm-12">
 				<h2 id="start-text-1">Find the apps for your needs</h2>
 				<button type="button" class="btn btn-secondary" style="margin-top: 5px">Sign up</button>
@@ -20,5 +39,18 @@
 		</div>
 	</div>
 </div>
+<div class="container-fluid" id="start-section-3">
+	<div class="row">
+		<div class="col-md-6 col-sm-12 start-description" align="center">
+			<h2>Whatever you need is here</h2>
+			<p>Choose from a growing list of apps</p>
+		</div>
+		<div class="col-md-6 col-sm-12" align="center">
+			<%= image_tag("apps.png", :height => "150px", :id => "image-apps") %>
+		</div>
+	</div>
+</div>
 
 <%= javascript_include_tag "scripts/start.js" %>
+
+<% end %>
