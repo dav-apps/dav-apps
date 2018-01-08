@@ -25,6 +25,9 @@ gem 'bootstrap', '~> 4.0.0.beta3'
 gem 'jquery-rails'
 gem 'sprockets'
 
+# Font Awesome
+gem "font-awesome-rails"
+
 # dav gem
 gem 'dav', github: 'Dav2070/dav-gem'
 

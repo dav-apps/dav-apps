@@ -6,7 +6,7 @@ class AppsController < ApplicationController
 
       @apps = Array.new
       begin
-         Dav::App.get_all_apps(session[:jwt]).each do |app|
+         Dav::App.get_all_apps(auth).each do |app|
             @apps.push(app)
          end
       rescue StandardError => e

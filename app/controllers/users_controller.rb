@@ -23,7 +23,9 @@ class UsersController < ApplicationController
    end
 
    def logout
-      session[:jwt] = nil;
+      session[:jwt] = nil
+      session[:username] = nil
+      session[:user_id] = nil
       flash[:success] = "You are now logged out. Have a nice day :)"
       redirect_to root_path
    end

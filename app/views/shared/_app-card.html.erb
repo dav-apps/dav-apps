@@ -4,5 +4,24 @@
       <div class="card-body">
          <p class="card-text"><%= app.description %></p>
       </div>
+      <div class="card-footer">
+         <% if app.link_web %>
+            <%= link_to app.link_web, class: "btn btn-light", target: "blank" do %>
+               <%= fa_icon "globe", style: "font-size: 23px;" %>
+            <% end %>
+         <% end %>
+
+         <% if app.link_play %>
+            <%= link_to app.link_play, class: "btn btn-light", target: "blank" do %>
+               <%= fa_icon "android", style: "font-size: 23px;" %>
+            <% end %>
+         <% end %>
+
+         <% if app.link_windows %>
+            <%= link_to app.link_windows, class: "btn btn-light", target: "blank" do %>
+               <%= fa_icon "windows", style: "font-size: 23px;" %>
+            <% end %>
+         <% end %>
+      </div>
    </div>
 </div>
