@@ -13,6 +13,7 @@ class UsersController < ApplicationController
          user = auth.login(email, password)
          session[:jwt] = user.jwt
          session[:username] = user.username
+         session[:user_id] = user.id
 
          redirect_to root_path
       rescue StandardError => e

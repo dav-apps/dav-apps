@@ -1,16 +1,10 @@
 <div class="container content">
    <h1 align="center">All Apps</h1>
+   <%= render 'layouts/messages' %>
 
    <div class="card-group mt-4">
       <% @apps.each do |app| %>
-      <div>
-         <div class="card bg-light m-3" style="max-width: 18rem;">
-            <div class="card-header"><h5><%= app.name %></h5></div>
-            <div class="card-body">
-               <p class="card-text"><%= app.description %></p>
-            </div>
-         </div>
-      </div>
+         <%= render 'shared/app-card', app: app %>
       <% end %>
    </div>
 </div>

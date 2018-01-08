@@ -7,7 +7,6 @@ class AppsController < ApplicationController
       @apps = Array.new
       begin
          Dav::App.get_all_apps(session[:jwt]).each do |app|
-            puts app.name
             @apps.push(app)
          end
       rescue StandardError => e

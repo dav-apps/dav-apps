@@ -5,7 +5,11 @@
 <div class="container content">
 	<h1 align="center">Your apps</h1>
 
-	
+	<div class="card-group mt-4">
+		<% @user.apps.each do |app| %>
+			<%= render 'shared/app-card', app: app %>
+		<% end %>
+   </div>
 </div>
 
 <% else %>
