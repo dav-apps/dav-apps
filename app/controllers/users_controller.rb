@@ -48,12 +48,67 @@ class UsersController < ApplicationController
             flash[:success] = "Thanks for signing up! You will receive an email to confirm your account."
             redirect_to root_path
          else
-            flash.now[:danger] = "The password confirmation does not match your password"
-         render 'signup'
+            flash.now[:danger] = "The password confirmation does not match your password."
+            render 'signup'
          end
       rescue StandardError => e
          flash.now[:danger] = e.message
          render 'signup'
+      end
+   end
+
+   def password_reset
+
+   end
+
+   def password_reset_action
+      email = params[:email]
+
+      begin
+         if email
+            Dav::User.send_reset_password_email(email)
+
+            flash[:success] = "You will receive an email to reset your password."
+            redirect_to root_path
+         end
+      rescue StandardError => e
+         flash.now[:danger] = e.message
+         render 'password_reset'
+      end
+   end
+
+   def reset_password
+      @password_confirmation_token = params[:password_confirmation_token]
+   end
+
+   def reset_password_action
+      password_confirmation_token = params[:password_confirmation_token]
+      password = params[:password]
+      password_confirmation = params[:password_confirmation]
+      auth = get_auth_object
+
+      begin
+         if password.length > 0 && password_confirmation.length > 0
+            if password == password_confirmation
+               Dav::User.set_password(password_confirmation_token, password)
+
+               flash[:success] = "Your password was updated successfully."
+               redirect_to root_path
+            else
+               flash.now[:danger] = "The password confirmation does not match your password."
+               render 'reset_password'
+            end
+         else
+            render 'reset_password'
+         end
+      rescue StandardError => e
+         if e.message.include?("1203")
+            flash[:danger] = "There was an error. Please try again."
+            redirect_to root_path
+         else
+            flash.now[:danger] = e.message
+            render 'reset_password'
+         end
       end
    end
 end
