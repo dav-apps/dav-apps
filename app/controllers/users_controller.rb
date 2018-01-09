@@ -133,4 +133,19 @@ class UsersController < ApplicationController
          end
       end
    end
+
+   def confirm_user
+      id = params[:id]
+      email_confirmation_token = params[:email_confirmation_token]
+
+      begin
+         Dav::User.confirm(id, email_confirmation_token)
+
+         flash[:success] = "Your account was successfully activated!"
+         redirect_to root_path
+      rescue StandardError => e
+         flash[:danger] = "There was an error. Please try again."
+         redirect_to root_path
+      end
+   end
 end
