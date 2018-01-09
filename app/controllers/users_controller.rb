@@ -45,7 +45,7 @@ class UsersController < ApplicationController
          if password == password_confirmation
             auth.signup(email, password, username)
 
-            flash[:success] = "Thanks for signing up! You will receive an email to confirm your account."
+            flash[:success] = "Thanks for signing up! You will receive an email to activate your account."
             redirect_to root_path
          else
             flash.now[:danger] = "The password confirmation does not match your password."
@@ -108,6 +108,28 @@ class UsersController < ApplicationController
          else
             flash.now[:danger] = e.message
             render 'reset_password'
+         end
+      end
+   end
+
+   def resend_activation_email
+
+   end
+
+   def resend_activation_email_action
+      email = params[:email]
+
+      if email.length < 1
+         render 'resend_activation_email'
+      else
+         begin
+            Dav::User.send_verification_email(email)
+   
+            flash[:success] = "You should now receive another activation email."
+            redirect_to root_path
+         rescue StandardError => e
+            flash.now[:danger] = e.message
+            render 'resend_activation_email'
          end
       end
    end

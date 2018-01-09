@@ -1,0 +1,15 @@
+<div class="content container">
+   <h1 align="center">Resend activation email</h1>
+   <p align="center">If you still didn't receive an email to activate your account, enter your email to send it again.</p>
+   <%= render 'layouts/messages' %>
+
+   <%= form_tag(resend_activation_email_path, class: "form-horizontal row mt-4", method: "post", role: "form") do |f| %>
+      <div class="form-group row col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+      <%= label_tag :email, "Email", class: "col-sm-2 col-form-label" %>
+         <div class="col-sm-10">
+            <%= email_field_tag :email, nil, class: "form-control", placeholder: "Enter your Email" %>
+            <%= submit_tag("Send", class: "btn btn-primary btn-md mt-3") %>
+         </div>
+      </div>
+   <% end %>
+</div>
