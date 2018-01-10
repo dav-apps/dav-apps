@@ -18,4 +18,8 @@ class StartsController < ApplicationController
 	def privacy
 
 	end
+
+	def pricing
+
+	end
 end

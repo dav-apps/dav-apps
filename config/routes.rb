@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 	# StartsController
 	root 'starts#index'
 	get 'privacy', to: 'starts#privacy'
+	get 'pricing', to: 'starts#pricing'
 
 	# UsersController
 	get 'login', to: 'users#login'
