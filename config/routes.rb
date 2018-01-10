@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  	root 'starts#index'
+
+	# StartsController
+	root 'starts#index'
+	get 'privacy', to: 'starts#privacy'
 
 	# UsersController
 	get 'login', to: 'users#login'
