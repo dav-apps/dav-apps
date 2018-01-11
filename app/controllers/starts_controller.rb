@@ -7,7 +7,6 @@ class StartsController < ApplicationController
 
 		begin
 			@user = Dav::User.get(session[:jwt], session[:user_id])
-			puts @user.apps
 		rescue StandardError => e
 			flash.now[:danger] = e.message
 			render 'index'

@@ -17,9 +17,16 @@ function setMenuVisibility(){
       // Hide main div and show plan div
       $("#main-menu").hide();
       $("#plans-menu").show();
+      $("#apps-menu").hide();
+   }else if(type == "apps"){
+      $("#main-menu").hide();
+      $("#plans-menu").hide();
+      $("#apps-menu").show();
    }else{
+      // Show main menu
       $("#main-menu").show();
       $("#plans-menu").hide();
+      $("#apps-menu").hide();
    }
 
    arrangeSidebar();

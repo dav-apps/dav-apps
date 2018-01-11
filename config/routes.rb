@@ -12,6 +12,7 @@ Rails.application.routes.draw do
 	get 'signup', to: 'users#signup'
 	post 'signup', to: 'users#signup_action'
 	get 'user', to: 'users#show'
+	post 'user', to: 'users#update'
 
 	get 'password_reset', to: 'users#password_reset'
 	post 'password_reset', to: 'users#password_reset_action'
@@ -20,6 +21,9 @@ Rails.application.routes.draw do
 	get 'resend_activation_email', to: 'users#resend_activation_email'
 	post 'resend_activation_email', to: 'users#resend_activation_email_action'
 	get 'confirm_user/:id/:email_confirmation_token', to: 'users#confirm_user'
+	get 'change_email/:id/:email_confirmation_token', to: 'users#change_email'
+	get 'change_password/:id/:password_confirmation_token', to: 'users#change_password'
+	get 'reset_new_email/:id', to: 'users#reset_new_email'
 
 	# AppsController
 	get 'apps', to: 'apps#index'

@@ -2,32 +2,77 @@
    <ul>
       <li><%= link_to "General", "", class: "text-dark" %></li>
       <li><%= link_to "Your Plan", "#plans", class: "text-dark" %></li>
+      <li><%= link_to "Apps", "#apps", class: "text-dark" %></li>
    </ul>
 </div>
 
 <div class="content row">
-   <div class="col-sm-12 col-md-2" id="sidebar-content">
+   <div class="col-sm-12 col-lg-2" id="sidebar-content">
       <ul class="list-group ml-3 mt-5">
          <%= link_to "General", "", class: "list-group-item list-group-item-action text-dark" %>
          <%= link_to "Your Plan", "#plans", class: "list-group-item list-group-item-action text-dark" %>
+         <%= link_to "Apps", "#apps", class: "list-group-item list-group-item-action text-dark" %>
       </ul>
    </div>
-   <div class="col-sm-12 col-md-8">
+   <div class="col-sm-12 col-lg-8">
       <div class="btn btn-light ml-2" id="toggle-button">
          <%= fa_icon "ellipsis-h", style: "font-size: 20px;" %>
       </div>
 
-      <div class="container">
-         <h1 align="center"><%= session[:username] %></h1>
+      <div class="container mt-3">
+         <div id="main-menu">
+            <h1 align="center">General Settings</h1>
+            <%= render 'layouts/messages' %>
 
-         <div class="col-8 offset-2 mt-3">
-            <div id="main-menu">
-               <p>Main menu</p>
-            </div>
+            <%= form_tag(user_path, class: "form-horizontal row mt-3", method: "post", role: "form") do |f| %>
+               <div class="form-group row col-10 offset-1 col-lg-8 offset-lg-2">
+                  <%= label_tag :username, "Username", class: "col-sm-2 col-form-label" %>
+                  <div class="col-sm-10">
+                     <%= text_field_tag :username, @user.username, class: "form-control", placeholder: "Your Username" %>
+                     <%= submit_tag("Update", class: "btn btn-primary btn-md mt-3") %>
+                  </div>
+               </div>
+            <% end %>
 
-            <div id="plans-menu">
-               <p>Plan menu</p>
-            </div>
+            <%= form_tag(user_path, class: "form-horizontal row mt-3", method: "post", role: "form") do |f| %>
+               <div class="form-group row col-10 offset-1 col-lg-8 offset-lg-2">
+                  <%= label_tag :email, "Email", class: "col-sm-2 col-form-label" %>
+                  <div class="col-sm-10">
+                     <%= email_field_tag :email, @user.email, class: "form-control", placeholder: "Your Email" %>
+                     <%= submit_tag("Update", class: "btn btn-primary btn-md mt-3") %>
+                  </div>
+               </div>
+            <% end %>
+
+            <%= form_tag(user_path, class: "form-horizontal row mt-5", method: "post", role: "form") do |f| %>
+               <div class="form-group row col-10 offset-1 col-lg-8 offset-lg-2">
+                  <%= label_tag :password, "New Password", class: "col-sm-2 col-form-label" %>
+                  <div class="col-sm-10">
+                     <%= password_field_tag :password, nil, class: "form-control", placeholder: "New Password" %>
+                  </div>
+               </div>
+               <div class="form-group row col-10 offset-1 col-lg-8 offset-lg-2">
+                  <%= label_tag :password_confirmation, "Password Confirmation", class: "col-sm-2 col-form-label" %>
+                  <div class="col-sm-10">
+                     <%= password_field_tag :password_confirmation, nil, class: "form-control", placeholder: "Confirm your new password" %>
+                     <%= submit_tag("Update", class: "btn btn-primary btn-md mt-3") %>
+                  </div>
+               </div>
+            <% end %>
+         </div>
+
+         <div id="plans-menu">
+            <h1 align="center">Your Plan</h1>
+            <%= render 'layouts/messages' %>
+
+            <p>Plan menu</p>
+         </div>
+
+         <div id="apps-menu">
+            <h1 align="center">Apps</h1>
+            <%= render 'layouts/messages' %>
+
+            <p>Apps Menu</p>
          </div>
       </div>
    </div>

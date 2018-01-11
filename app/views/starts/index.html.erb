@@ -1,9 +1,8 @@
 <% if session[:jwt] %>
 
-<%= render 'layouts/messages' %>
-
 <div class="container content">
 	<h1 align="center">Your apps</h1>
+	<%= render 'layouts/messages' %>
 
 	<div class="card-group mt-4">
 		<% @user.apps.each do |app| %>

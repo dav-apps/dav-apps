@@ -60,9 +60,78 @@ class UsersController < ApplicationController
    end
 
    def show
-
+      @user = Dav::User.get(session[:jwt], session[:user_id])
    end
 
+   def update
+      auth = get_auth_object
+      @user = Dav::User.get(session[:jwt], session[:user_id])
+      username = params[:username]
+      email = params[:email]
+      password = params[:password]
+      password_confirmation = params[:password_confirmation]
+
+      if username
+         if username == @user.username
+            redirect_to user_path
+         elsif username.length < 1
+            redirect_to user_path
+         else
+            # Update username
+            begin
+               @user.update({username: username})
+               flash[:success] = "Your new username was saved successfully!"
+               redirect_to user_path
+            rescue StandardError => e
+               flash[:danger] = e.message
+               redirect_to user_path
+            end
+         end
+      end
+
+      if email
+         if email == @user.email
+            redirect_to user_path
+         elsif email.length < 1
+            redirect_to user_path
+         else
+            # Update email
+            begin
+               @user.update({email: email})
+               flash[:success] = "We sent you an email to your new email address to confirm it."
+               redirect_to user_path
+            rescue StandardError => e
+               flash[:danger] = e.message
+               redirect_to user_path
+            end
+         end
+      end
+
+      if password || password_confirmation
+         if password.length < 1 && password_confirmation.length < 1
+            redirect_to user_path
+         elsif password.length < 5
+            flash[:danger] = "Your new password is too short."
+            redirect_to user_path
+         elsif password != password_confirmation
+            flash[:danger] = "Your new password does not match your password confirmation."
+            redirect_to user_path
+         else
+            # Update password
+            begin
+               @user.update({password: password})
+               flash[:success] = "You will receive an email to confirm your new password."
+               redirect_to user_path
+            rescue StandardError => e
+               flash[:danger] = e.message
+               redirect_to user_path
+            end
+         end
+      end
+   end
+
+
+   # Dev routes
    def password_reset
 
    end
@@ -148,6 +217,50 @@ class UsersController < ApplicationController
          Dav::User.confirm(id, email_confirmation_token)
 
          flash[:success] = "Your account was successfully activated!"
+         redirect_to root_path
+      rescue StandardError => e
+         flash[:danger] = "There was an error. Please try again."
+         redirect_to root_path
+      end
+   end
+
+   def change_email
+      email_confirmation_token = params[:email_confirmation_token]
+      id = params[:id]
+
+      begin
+         Dav::User.save_new_email(id, email_confirmation_token)
+
+         flash[:success] = "Your email was successfully changed!"
+         redirect_to root_path
+      rescue StandardError => e
+         flash[:danger] = "There was an error. Please try again."
+         redirect_to root_path
+      end
+   end
+
+   def change_password
+      password_confirmation_token = params[:password_confirmation_token]
+      id = params[:id]
+
+      begin
+         Dav::User.save_new_password(id, password_confirmation_token)
+
+         flash[:success] = "Your password was successfully changed!"
+         redirect_to root_path
+      rescue StandardError => e
+         flash[:danger] = "There was an error. Please try again."
+         redirect_to root_path
+      end
+   end
+
+   def reset_new_email
+      id = params[:id]
+
+      begin
+         Dav::User.reset_new_email(id)
+
+         flash[:success] = "Your account now uses your previous email again."
          redirect_to root_path
       rescue StandardError => e
          flash[:danger] = "There was an error. Please try again."
