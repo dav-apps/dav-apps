@@ -67,8 +67,10 @@
 
             <div class="row">
                <div class="col-12 offset-1">
-                  <h5>Your current plan: Free</h5>
-                  <button type="button" class="btn btn-primary">Change your plan</button>
+                  <h5>Your current plan: <%= @user.plan == 0 ? "Free" : "Plus" %></h5>
+                  <%= hidden_field_tag :plan, @user.plan %>
+
+                  <%= link_to "Change your plan", "#change-plan-modal", :class => "btn btn-primary", "data-toggle" => "modal" %>
                </div>
             </div>
 
@@ -113,7 +115,68 @@
             <h1 align="center">Your Apps</h1>
             <%= render 'layouts/messages' %>
 
-            <p>Apps Menu</p>
+            <div class="list-group">
+               <% @user.apps.each do |app| %>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                     <h4><%= app.name %></h4>
+                     <%= link_to "Remove", "#delete-app-data-modal", :class => "btn btn-danger", "data-toggle" => "modal" %>
+                  </li>
+
+                  <div class="modal fade" id="delete-app-data-modal" tabindex="-1" role="dialog">
+                     <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                           <div class="modal-header">
+                              <h5 class="modal-title">Remove App</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span>
+                              </button>
+                           </div>
+                           <div class="modal-body">
+                              <p>Are you sure you want to remove the app "<%= app.name %>" from your account? All your app data will be erased.</p>
+                           </div>
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-danger">Delete</button>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+               <% end %>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="change-plan-modal" tabindex="-1" role="dialog">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Change your plan</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body row">
+            <div class="col-4">
+               <%= form_tag(user_path, class: "form-horizontal row mt-4", method: "post", role: "form") do |f| %>
+                  <div class="form-group col-10 offset-1">
+                     <label for="select-plan">Choose your plan</label>
+                     <select class="form-control" id="select-plan">
+                        <option>Free</option>
+                        <option>Plus</option>
+                     </select>
+                  </div>
+                  <div class="form-group col-10 offset-1" id="payment-form">
+                     <p>Credit card form</p>
+                  </div>
+               <% end %>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary disabled" id="update-button">Update</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
          </div>
       </div>
    </div>
