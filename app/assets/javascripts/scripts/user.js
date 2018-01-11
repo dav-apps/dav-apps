@@ -18,15 +18,21 @@ function setMenuVisibility(){
       $("#main-menu").hide();
       $("#plans-menu").show();
       $("#apps-menu").hide();
+
+      $("#plans-sidebar-entry").addClass("active");
    }else if(type == "apps"){
       $("#main-menu").hide();
       $("#plans-menu").hide();
       $("#apps-menu").show();
+
+      $("#apps-sidebar-entry").addClass("active");
    }else{
       // Show main menu
       $("#main-menu").show();
       $("#plans-menu").hide();
       $("#apps-menu").hide();
+
+      $("#main-sidebar-entry").addClass("active");
    }
 
    arrangeSidebar();
