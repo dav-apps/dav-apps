@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
 
+   before_action :require_user, only: [:show, :settings]
+
    def login
       
    end
@@ -55,6 +57,10 @@ class UsersController < ApplicationController
          flash.now[:danger] = e.message
          render 'signup'
       end
+   end
+
+   def show
+
    end
 
    def password_reset

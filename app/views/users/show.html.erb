@@ -1,0 +1,36 @@
+<div id="sidr">
+   <ul>
+      <li><%= link_to "General", "", class: "text-dark" %></li>
+      <li><%= link_to "Your Plan", "#plans", class: "text-dark" %></li>
+   </ul>
+</div>
+
+<div class="content row">
+   <div class="col-sm-12 col-md-2" id="sidebar-content">
+      <ul class="list-group ml-3 mt-5">
+         <%= link_to "General", "", class: "list-group-item list-group-item-action text-dark" %>
+         <%= link_to "Your Plan", "#plans", class: "list-group-item list-group-item-action text-dark" %>
+      </ul>
+   </div>
+   <div class="col-sm-12 col-md-8">
+      <div class="btn btn-light ml-2" id="toggle-button">
+         <%= fa_icon "ellipsis-h", style: "font-size: 20px;" %>
+      </div>
+
+      <div class="container">
+         <h1 align="center"><%= session[:username] %></h1>
+
+         <div class="col-8 offset-2 mt-3">
+            <div id="main-menu">
+               <p>Main menu</p>
+            </div>
+
+            <div id="plans-menu">
+               <p>Plan menu</p>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<%= javascript_include_tag "scripts/user.js" %>

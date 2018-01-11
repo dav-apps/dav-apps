@@ -14,7 +14,7 @@
 
             <!-- Logged in -->
             <li class="nav-item">
-               <%= link_to session[:username], root_path, class: "nav-link navigation-text" %>
+               <%= link_to session[:username], user_path, class: "nav-link navigation-text" %>
             </li>
             <li class="nav-item">
                <%= link_to "Log out", logout_path, class: "nav-link navigation-text" %>
