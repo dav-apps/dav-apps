@@ -70,6 +70,7 @@ class UsersController < ApplicationController
       email = params[:email]
       password = params[:password]
       password_confirmation = params[:password_confirmation]
+      app_id = params[:app_id]
 
       if username
          if username == @user.username
@@ -126,6 +127,18 @@ class UsersController < ApplicationController
                flash[:danger] = e.message
                redirect_to user_path
             end
+         end
+      end
+
+      if app_id
+         # Remove app data
+         begin
+            @user.remove_app(app_id)
+            flash[:success] = "The app was successfully removed!"
+            redirect_to user_path + "#apps"
+         rescue StandardError => e
+            flash[:danger] = e.message
+            redirect_to user_path + "#apps"
          end
       end
    end

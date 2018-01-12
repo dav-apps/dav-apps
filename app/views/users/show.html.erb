@@ -119,10 +119,10 @@
                <% @user.apps.each do |app| %>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                      <h4><%= app.name %></h4>
-                     <%= link_to "Remove", "#delete-app-data-modal", :class => "btn btn-danger", "data-toggle" => "modal" %>
+                     <%= link_to "Remove", "#delete-app-data-modal-#{app.id}", :class => "btn btn-danger", "data-toggle" => "modal" %>
                   </li>
 
-                  <div class="modal fade" id="delete-app-data-modal" tabindex="-1" role="dialog">
+                  <div class="modal fade" id="delete-app-data-modal-<%= app.id %>" tabindex="-1" role="dialog">
                      <div class="modal-dialog" role="document">
                         <div class="modal-content">
                            <div class="modal-header">
@@ -135,7 +135,7 @@
                               <p>Are you sure you want to remove the app "<%= app.name %>" from your account? All your app data will be erased.</p>
                            </div>
                            <div class="modal-footer">
-                              <button type="button" class="btn btn-danger">Delete</button>
+                              <%= button_to 'Delete', {:controller => "users", :action => "update", :app_id => app.id}, :method=>:post, class: "btn btn-danger" %>
                               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                            </div>
                         </div>

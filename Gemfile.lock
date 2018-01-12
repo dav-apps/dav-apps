@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Dav2070/dav-gem.git
-  revision: 73c47da25664aaa94a1845527cd2798b44be583e
+  revision: 2b78de278d247359aa7833a398f59d8fa960cf8f
   specs:
     dav (0.1.2)
 
@@ -53,7 +53,7 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (8.0.0)
-    autoprefixer-rails (7.2.4)
+    autoprefixer-rails (7.2.5)
       execjs
     bindex (0.5.0)
     bootstrap (4.0.0.beta3)
