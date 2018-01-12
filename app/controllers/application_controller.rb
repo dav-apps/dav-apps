@@ -19,4 +19,10 @@ class ApplicationController < ActionController::Base
 			redirect_to root_path
 		end
 	end
+
+	def clear_session
+		session[:jwt] = nil
+		session[:user_id] = nil
+		session[:username] = nil
+	end
 end

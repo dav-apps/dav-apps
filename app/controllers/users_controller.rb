@@ -71,6 +71,7 @@ class UsersController < ApplicationController
       password = params[:password]
       password_confirmation = params[:password_confirmation]
       app_id = params[:app_id]
+      delete_account = params[:delete_account]
 
       if username
          if username == @user.username
@@ -139,6 +140,17 @@ class UsersController < ApplicationController
          rescue StandardError => e
             flash[:danger] = e.message
             redirect_to user_path + "#apps"
+         end
+      end
+
+      if delete_account
+         begin
+            Dav::User.send_delete_account_email(@user.email)
+            flash[:success] = "You will receive an email delete your account."
+            redirect_to user_path
+         rescue StandardError => e
+            flash[:danger] = e.message
+            redirect_to user_path
          end
       end
    end
@@ -274,6 +286,23 @@ class UsersController < ApplicationController
          Dav::User.reset_new_email(id)
 
          flash[:success] = "Your account now uses your previous email again."
+         redirect_to root_path
+      rescue StandardError => e
+         flash[:danger] = "There was an error. Please try again."
+         redirect_to root_path
+      end
+   end
+
+   def delete_account
+      user_id = params[:id]
+      email_confirmation_token = params[:email_confirmation_token]
+      password_confirmation_token = params[:password_confirmation_token]
+
+      begin
+         Dav::User.delete(user_id, email_confirmation_token, password_confirmation_token)
+
+         clear_session
+         flash[:success] = "Your account was successfully deleted."
          redirect_to root_path
       rescue StandardError => e
          flash[:danger] = "There was an error. Please try again."

@@ -24,6 +24,7 @@ Rails.application.routes.draw do
 	get 'change_email/:id/:email_confirmation_token', to: 'users#change_email'
 	get 'change_password/:id/:password_confirmation_token', to: 'users#change_password'
 	get 'reset_new_email/:id', to: 'users#reset_new_email'
+	get 'delete_account/:id/:email_confirmation_token/:password_confirmation_token', to: 'users#delete_account'
 
 	# AppsController
 	get 'apps', to: 'apps#index'
