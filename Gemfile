@@ -59,8 +59,7 @@ end
 
 group :production do
 	# Postgres for the production db
-	gem 'pg'
-	gem 'therubyracer'
+	gem 'pg', '~> 0.21.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
