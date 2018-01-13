@@ -13,9 +13,7 @@ class UsersController < ApplicationController
 
       begin
          user = auth.login(email, password)
-         session[:jwt] = user.jwt
-         session[:username] = user.username
-         session[:user_id] = user.id
+         set_session(user)
 
          redirect_to root_path
       rescue StandardError => e
@@ -27,31 +25,52 @@ class UsersController < ApplicationController
    def login_implicit
       api_key = params[:api_key]
       redirect_url = params[:redirect_url]
+      auth = get_auth_object
 
       if !api_key || !redirect_url
          flash[:danger] = "There was an error. Please try again."
          redirect_to root_path
       else
-         session["api_key"] = api_key
-         session["redirect_url"] = redirect_url + "#/"
+         # Check if the user is logged in on the website
+         if session[:jwt]
+            begin
+               user = Dav::Auth.login_by_jwt(session[:jwt], api_key)
+               redirect_to "#{redirect_url}?jwt=#{user.jwt}"
+            rescue StandardError => e
+               session[:api_key] = api_key
+               session[:redirect_url] = redirect_url
+            end
+         else
+            session[:api_key] = api_key
+            session[:redirect_url] = redirect_url
+         end
       end
    end
 
    def login_implicit_action
-      api_key = session["api_key"]
-      redirect_url = session["redirect_url"]
+      api_key = session[:api_key]
+      redirect_url = session[:redirect_url]
+
+      email = params[:email]
+      password = params[:password]
       
       begin
          auth = get_auth_object
          
+         user = auth.login(email, password)
+         set_session(user)
+
          dev = Dav::Dev.get_by_api_key(auth, api_key)
          dev_auth = Dav::Auth.new(api_key: dev.api_key, 
                                  secret_key: dev.secret_key,
                                  uuid: dev.uuid,
                                  environment: Rails.env)
-         user = dev_auth.login(params["email"], params["password"])
+         user2 = dev_auth.login(email, password)
+
+         session[:api_key] = nil
+         session[:redirect_url] = nil
          
-         redirect_to "#{redirect_url}?jwt=#{user.jwt}"
+         redirect_to "#{redirect_url}?jwt=#{user2.jwt}"
       rescue StandardError => e
          flash.now[:danger] = e.message
          render 'login_implicit'
@@ -59,9 +78,7 @@ class UsersController < ApplicationController
    end
 
    def logout
-      session[:jwt] = nil
-      session[:username] = nil
-      session[:user_id] = nil
+      clear_session
       flash[:success] = "You are now logged out. Have a nice day :)"
       redirect_to root_path
    end

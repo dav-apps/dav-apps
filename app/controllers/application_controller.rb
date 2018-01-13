@@ -25,4 +25,10 @@ class ApplicationController < ActionController::Base
 		session[:user_id] = nil
 		session[:username] = nil
 	end
+
+	def set_session(user)
+		session[:jwt] = user.jwt
+		session[:user_id] = user.id
+		session[:username] = user.username
+	end
 end
