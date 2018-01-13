@@ -146,7 +146,7 @@ class UsersController < ApplicationController
       if delete_account
          begin
             Dav::User.send_delete_account_email(@user.email)
-            flash[:success] = "You will receive an email delete your account."
+            flash[:success] = "You will receive an email to delete your account."
             redirect_to user_path
          rescue StandardError => e
             flash[:danger] = e.message

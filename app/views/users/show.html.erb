@@ -113,8 +113,17 @@
          </div>
 
          <div id="apps-menu">
-            <h1 align="center">Your Apps</h1>
+            <h1 align="center" class="mb-3">Your Apps</h1>
             <%= render 'layouts/messages' %>
+
+            <% if @user.apps.length == 0 %>
+               <div class="jumbotron mt-3" style="background: #f4f4f4; padding: 35px;">
+                  <p class="lead">You're not using any app right now. Check out the All Apps page to find your first app!</p>
+                  <p class="lead">
+                     <%= link_to "Find apps", apps_path, class: "btn btn-primary btn-lg" %>
+                  </p>
+               </div>
+            <% end %>
 
             <div class="list-group">
                <% @user.apps.each do |app| %>
