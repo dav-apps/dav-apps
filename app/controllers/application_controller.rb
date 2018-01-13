@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
 	protect_from_forgery with: :exception
-	helper_method :get_auth_object, :logged_in?, :require_user
+	helper_method :get_auth_object, :logged_in?, :require_user, :login_implicit_page?
 
   	def get_auth_object
     	Dav::Auth.new(api_key: ENV["DAV_API_KEY"], 

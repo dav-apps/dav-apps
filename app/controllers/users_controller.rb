@@ -24,6 +24,40 @@ class UsersController < ApplicationController
       end
    end
 
+   def login_implicit
+      api_key = params[:api_key]
+      redirect_url = params[:redirect_url]
+
+      if !api_key || !redirect_url
+         flash[:danger] = "There was an error. Please try again."
+         redirect_to root_path
+      else
+         session["api_key"] = api_key
+         session["redirect_url"] = redirect_url + "#/"
+      end
+   end
+
+   def login_implicit_action
+      api_key = session["api_key"]
+      redirect_url = session["redirect_url"]
+      
+      begin
+         auth = get_auth_object
+         
+         dev = Dav::Dev.get_by_api_key(auth, api_key)
+         dev_auth = Dav::Auth.new(api_key: dev.api_key, 
+                                 secret_key: dev.secret_key,
+                                 uuid: dev.uuid,
+                                 environment: Rails.env)
+         user = dev_auth.login(params["email"], params["password"])
+         
+         redirect_to "#{redirect_url}?jwt=#{user.jwt}"
+      rescue StandardError => e
+         flash.now[:danger] = e.message
+         render 'login_implicit'
+      end
+   end
+
    def logout
       session[:jwt] = nil
       session[:username] = nil

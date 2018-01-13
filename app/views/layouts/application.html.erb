@@ -15,8 +15,8 @@
   	</head>
 
   	<body>
-	  	<%= render 'layouts/navbar' %>
+	  	<%= render 'layouts/navbar' if !current_page?(action: 'login_implicit', controller: 'users') %>
 		<%= yield %>
-		<%= render 'layouts/footer' %>
+		<%= render 'layouts/footer' if !current_page?(action: 'login_implicit', controller: 'users') %>
   	</body>
 </html>
