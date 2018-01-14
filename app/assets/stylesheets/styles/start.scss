@@ -6,7 +6,7 @@
    background-image: asset_url("start-background.jpg");
    background-size:cover;
    background-repeat: no-repeat;
-   background-position: center-top;
+   background-position: center-right;
    height: 500px;
    width: 100%;
 }
@@ -14,13 +14,25 @@
 #start-section-2{
    background-color: #DBDBDB;
    padding: 100px;
-   height: 200px;
+   //height: 200px;
 }
 
 #start-section-3{
 	background-color: #AEC9A5;
    padding: 100px;
-   height: 200px;
+}
+
+#start-section-4{
+   background-color: rgb(103, 182, 255);
+   padding: 100px;
+}
+
+#start-section-5{
+   //background-color: rgb(240, 181, 93);
+   background-color: rgb(255, 194, 103);
+   //background-color: rgb(255, 164, 103);
+   //background-color: rgb(255, 103, 136);
+   padding: 100px;
 }
 
 #start-text-1{

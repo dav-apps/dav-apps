@@ -44,18 +44,41 @@
 		</div>
 		<div class="col-md-6 col-sm-12 start-description" id="start-description-1" align="center">
 			<h2>Anything in one place</h2>
-			<p>Syncronize your data across all devices</p>
+			<p>Synchronize your data across all devices</p>
 		</div>
 	</div>
 </div>
 <div class="container-fluid" id="start-section-3">
 	<div class="row">
 		<div class="col-md-6 col-sm-12 start-description" align="center">
-			<h2>Whatever you need is here</h2>
-			<p>Choose from a growing list of apps</p>
+			<h2>Platform independent</h2>
+			<p>Our apps work on the most important platforms</p>
 		</div>
 		<div class="col-md-6 col-sm-12" align="center">
-			<%= image_tag("apps.png", :height => "150px", :id => "image-apps") %>
+			<%= fa_icon "android", style: "font-size: 70px; color: #535254", class: "m-2" %>
+			<%= fa_icon "windows", style: "font-size: 70px; color: #535254", class: "m-2" %>
+			<%= fa_icon "globe", style: "font-size: 70px; color: #535254", class: "m-2" %>
+		</div>
+	</div>
+</div>
+<div class="container-fluid" id="start-section-4">
+	<div class="row">
+		<div class="col-md-6 col-sm-12" align="center">
+			<%= fa_icon "user-secret", style: "font-size: 90px; color: #535254", class: "m-2" %>
+		</div>
+		<div class="col-md-6 col-sm-12 start-description" align="center">
+			<h2>Privacy matters</h2>
+			<p>We will never track you and sell your personal data</p>
+		</div>
+	</div>
+</div>
+<div class="container-fluid" id="start-section-5">
+	<div class="row">
+		<div class="col-10 offset-1 start-description" align="center">
+			<h3>Convinced?</h3>
+			<p>Try it out for free</p>
+			<%= link_to "Sign up", signup_path, class: "btn btn-secondary mt-2" %>
+			<%= link_to "Find Apps", apps_path, class: "btn btn-primary mt-2" %>
 		</div>
 	</div>
 </div>
