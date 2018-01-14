@@ -72,8 +72,8 @@ class UsersController < ApplicationController
          
          redirect_to "#{redirect_url}?jwt=#{user2.jwt}"
       rescue StandardError => e
-         flash.now[:danger] = e.message
-         render 'login_implicit'
+         flash[:danger] = e.message
+         redirect_to login_implicit_path + "?api_key=#{api_key}&redirect_url=#{CGI.escape(redirect_url)}"
       end
    end
 
