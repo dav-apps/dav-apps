@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
   	<head>
-    	<title>dav</title>
+		<title>dav</title>
+		<link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
     	<%= csrf_meta_tags %>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     	<%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
 		<%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 
-		<% if params[:controller] == "users" %>
-			<script src="//cdn.jsdelivr.net/jquery.sidr/2.2.1/jquery.sidr.min.js"></script>
-			<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.sidr/2.2.1/stylesheets/jquery.sidr.light.min.css">
-		<% end %>
+		<script src="//cdn.jsdelivr.net/jquery.sidr/2.2.1/jquery.sidr.min.js"></script>
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/jquery.sidr/2.2.1/stylesheets/jquery.sidr.light.min.css">
   	</head>
 
   	<body>
