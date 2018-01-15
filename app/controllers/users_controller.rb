@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-   before_action :require_user, only: [:show, :settings]
+   before_action :require_user, only: [:show]
 
    def login
       
@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
          redirect_to root_path
       rescue StandardError => e
-         flash.now[:danger] = e.message
+         flash.now[:danger] = replace_error_message(e.message)
          render 'login'
       end
    end
@@ -72,7 +72,7 @@ class UsersController < ApplicationController
          
          redirect_to "#{redirect_url}?jwt=#{user2.jwt}"
       rescue StandardError => e
-         flash[:danger] = e.message
+         flash[:danger] = replace_error_message(e.message)
          redirect_to login_implicit_path + "?api_key=#{api_key}&redirect_url=#{CGI.escape(redirect_url)}"
       end
    end
@@ -105,7 +105,7 @@ class UsersController < ApplicationController
             render 'signup'
          end
       rescue StandardError => e
-         flash.now[:danger] = e.message
+         flash.now[:danger] = replace_error_message(e.message)
          render 'signup'
       end
    end
@@ -136,7 +136,7 @@ class UsersController < ApplicationController
                flash[:success] = "Your new username was saved successfully!"
                redirect_to user_path
             rescue StandardError => e
-               flash[:danger] = e.message
+               flash[:danger] = replace_error_message(e.message)
                redirect_to user_path
             end
          end
@@ -154,7 +154,7 @@ class UsersController < ApplicationController
                flash[:success] = "We sent you an email to your new email address to confirm it."
                redirect_to user_path
             rescue StandardError => e
-               flash[:danger] = e.message
+               flash[:danger] = replace_error_message(e.message)
                redirect_to user_path
             end
          end
@@ -176,7 +176,7 @@ class UsersController < ApplicationController
                flash[:success] = "You will receive an email to confirm your new password."
                redirect_to user_path
             rescue StandardError => e
-               flash[:danger] = e.message
+               flash[:danger] = replace_error_message(e.message)
                redirect_to user_path
             end
          end
@@ -189,7 +189,7 @@ class UsersController < ApplicationController
             flash[:success] = "The app was successfully removed!"
             redirect_to user_path + "#apps"
          rescue StandardError => e
-            flash[:danger] = e.message
+            flash[:danger] = replace_error_message(e.message)
             redirect_to user_path + "#apps"
          end
       end
@@ -200,7 +200,7 @@ class UsersController < ApplicationController
             flash[:success] = "You will receive an email to delete your account."
             redirect_to user_path
          rescue StandardError => e
-            flash[:danger] = e.message
+            flash[:danger] = replace_error_message(e.message)
             redirect_to user_path
          end
       end
@@ -223,7 +223,7 @@ class UsersController < ApplicationController
             redirect_to root_path
          end
       rescue StandardError => e
-         flash.now[:danger] = e.message
+         flash.now[:danger] = replace_error_message(e.message)
          render 'password_reset'
       end
    end
@@ -279,7 +279,7 @@ class UsersController < ApplicationController
             flash[:success] = "You should now receive another activation email."
             redirect_to root_path
          rescue StandardError => e
-            flash.now[:danger] = e.message
+            flash.now[:danger] = replace_error_message(e.message)
             render 'resend_activation_email'
          end
       end

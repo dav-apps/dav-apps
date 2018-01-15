@@ -31,4 +31,49 @@ class ApplicationController < ActionController::Base
 		session[:user_id] = user.id
 		session[:username] = user.username
 	end
+
+	def replace_error_message(error)
+		if error.include?("2801") || error.include?("1201")
+			"Login was not possible"
+		elsif error.include?("1202")
+			"You can't log in before you activated your account"
+		elsif error.include?("1301") || error.include?("1302") || error.include?("1303")
+			flash[:danger] = "Your session expired. Please log in again."
+			redirect_to logout_path
+		elsif error.include?("2201")
+			"Your username is too short"
+		elsif error.include?("2401")
+			"Your email address is not valid"
+		elsif error.include?("2701")
+			"This username is already taken"
+		elsif error.include?("2702")
+			"This email is already being used by another user"
+		elsif error.include?("2201")
+			"Your username is too short"
+		elsif error.include?("2202")
+			"Your password is too short"
+		elsif error.include?("2203")
+			"The name is too short"
+		elsif error.include?("2204")
+			"The description is too short"
+		elsif error.include?("2205")
+			"The table name is too short"
+		elsif error.include?("2301")
+			"Your username is too long"
+		elsif error.include?("2302")
+			"Your password is too long"
+		elsif error.include?("2303")
+			"The name is too long"
+		elsif error.include?("2304")
+			"The description is too long"
+		elsif error.include?("2305")
+			"The table name is too long"
+		elsif error.include?("2501")
+			"The table name contains not allowed characters"
+		elsif error.include?("1203") || error.include?("1204")
+			"There was an error. Please try again."
+		else
+			error
+		end
+	end
 end
