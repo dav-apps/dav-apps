@@ -24,6 +24,14 @@
             <h1 align="center">General Settings</h1>
             <%= render 'layouts/messages' %>
 
+            <%= form_tag(user_path, class: "form-horizontal mt-3", method: "post", role: "form", multipart: true) do |f| %>
+               <div class="form-group" align="center">
+                  <%= image_tag(ENV["DAV_BLOB_STORAGE_BASE_URL"] + @user.id.to_s + ".png", :alt => "Avatar", :height => "150px", class: "img", align: "center") %><br>
+                  <%= file_field_tag :avatar, :accept => 'image/jpeg,image/png' %>
+                  <%= submit_tag("Update", class: "btn btn-primary btn-md mt-3") %>
+               </div>
+            <% end %>
+
             <%= form_tag(user_path, class: "form-horizontal row mt-3", method: "post", role: "form") do |f| %>
                <div class="form-group row col-10 offset-1 col-lg-8 offset-lg-2">
                   <%= label_tag :username, "Username", class: "col-sm-2 col-form-label" %>

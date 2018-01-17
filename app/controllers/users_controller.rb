@@ -122,6 +122,7 @@ class UsersController < ApplicationController
       password = params[:password]
       password_confirmation = params[:password_confirmation]
       app_id = params[:app_id]
+      avatar = params[:avatar]
       delete_account = params[:delete_account]
 
       if username
@@ -203,6 +204,29 @@ class UsersController < ApplicationController
             flash[:danger] = replace_error_message(e.message)
             redirect_to user_path
          end
+      end
+
+      if avatar
+         begin
+            if File.size(avatar.tempfile) < 5000000
+               file = File.open(avatar.tempfile, "rb")
+               contents = Base64.encode64(file.read)
+
+               @user.update({avatar: contents})
+               flash[:success] = "Avatar was successfully uploaded."
+               redirect_to user_path
+            else
+               flash[:danger] = "The file is too large."
+               redirect_to user_path
+            end
+         rescue StandardError => e
+            flash[:danger] = replace_error_message(e.message)
+            redirect_to user_path
+         end
+      end
+
+      if !username && !email && !password && !password_confirmation && !app_id && !delete_account && !avatar
+         redirect_to user_path
       end
    end
 
