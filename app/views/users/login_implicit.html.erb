@@ -2,20 +2,52 @@
    <h1 align="center">Log in</h1>
    <%= render 'layouts/messages' %>
 
-   <%= form_tag(login_implicit_path, class: "form-horizontal row mt-4", method: "post", role: "form") do |f| %>
-      <div class="form-group row col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
-         <%= label_tag :email, "Email", class: "col-sm-2 col-form-label" %>
-         <div class="col-sm-10">
-            <%= email_field_tag :email, nil, class: "form-control", placeholder: "Email" %>
+   <p hidden id="logged-in"><%= !session[:jwt].nil? %></p>
+
+   <% if session[:jwt] %>
+      <div class="list-group col-sm-6 offset-sm-3 col-md-4 offset-md-4">
+         <div id="logged-in-user-list">
+            <%= button_to(login_implicit_path, params: {current_user: true}, type: 'button', class: "list-group-item list-group-item-action") do %>
+               <div class="media">
+                  <div class="media-left">
+                     <%= image_tag(@user.avatar, class: "media-object", height: "70px") %>
+                  </div>
+                  <div class="media-body mt-3 ml-3">
+                     <h4 class="media-heading"><%= @user.username %></h4>
+                  </div>
+               </div>
+            <% end %>
+            
+            <div class="list-group-item list-group-item-action" id="log-in-user">
+               <div class="media">
+                  <div class="media-left ml-3">
+                     <%= fa_icon "user-plus", style: "font-size: 45px" %>
+                  </div>
+                  <div class="media-body mt-3 ml-3">
+                     <h6 class="media-heading">Log in as another user</h6>
+                  </div>
+               </div>
+            </div>
          </div>
       </div>
-      <div class="form-group row col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
-         <%= label_tag :password, "Password", class: "col-sm-2 col-form-label" %>
-         <div class="col-sm-10">
-            <%= password_field_tag :password, nil, class: "form-control", placeholder: "Password" %>
-            <p class="mt-2"><%= link_to "Forgot password", password_reset_path, style: "color: black; font-size: 15px;" %></p>
-            <%= submit_tag("Log in", class: "btn btn-primary btn-md") %>
-            <%= link_to "Sign up", signup_path, class: "btn btn-secondary btn-md", style: "float: right;" %>
+   <% end %>
+
+   <%= form_tag(login_implicit_path, class: "form-horizontal mt-4", method: "post", role: "form") do |f| %>
+      <div class="hidden" id="login-implicit-form">
+         <div class="form-group row col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+            <%= label_tag :email, "Email", class: "col-sm-2 col-form-label" %>
+            <div class="col-sm-10">
+               <%= email_field_tag :email, nil, class: "form-control", placeholder: "Email" %>
+            </div>
+         </div>
+         <div class="form-group row col-sm-10 offset-sm-1 col-lg-8 offset-lg-2">
+            <%= label_tag :password, "Password", class: "col-sm-2 col-form-label" %>
+            <div class="col-sm-10">
+               <%= password_field_tag :password, nil, class: "form-control", placeholder: "Password" %>
+               <p class="mt-2"><%= link_to "Forgot password", password_reset_path, style: "color: black; font-size: 15px;" %></p>
+               <%= submit_tag("Log in", class: "btn btn-primary btn-md") %>
+               <%= link_to "Sign up", signup_path, class: "btn btn-secondary btn-md", style: "float: right;" %>
+            </div>
          </div>
       </div>
    <% end %>

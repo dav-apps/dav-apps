@@ -31,19 +31,12 @@ class UsersController < ApplicationController
          flash[:danger] = "There was an error. Please try again."
          redirect_to root_path
       else
-         # Check if the user is logged in on the website
          if session[:jwt]
-            begin
-               user = Dav::Auth.login_by_jwt(session[:jwt], api_key)
-               redirect_to "#{redirect_url}?jwt=#{user.jwt}"
-            rescue StandardError => e
-               session[:api_key] = api_key
-               session[:redirect_url] = redirect_url
-            end
-         else
-            session[:api_key] = api_key
-            session[:redirect_url] = redirect_url
+            @user = Dav::User.get_by_jwt(session[:jwt])
          end
+
+         session[:api_key] = api_key
+         session[:redirect_url] = redirect_url
       end
    end
 
@@ -54,26 +47,39 @@ class UsersController < ApplicationController
       email = params[:email]
       password = params[:password]
       
-      begin
-         auth = get_auth_object
-         
-         user = auth.login(email, password)
-         set_session(user)
-
-         dev = Dav::Dev.get_by_api_key(auth, api_key)
-         dev_auth = Dav::Auth.new(api_key: dev.api_key, 
-                                 secret_key: dev.secret_key,
-                                 uuid: dev.uuid,
-                                 environment: Rails.env)
-         user2 = dev_auth.login(email, password)
-
-         session[:api_key] = nil
-         session[:redirect_url] = nil
-         
-         redirect_to "#{redirect_url}?jwt=#{user2.jwt}"
-      rescue StandardError => e
-         flash[:danger] = replace_error_message(e.message)
-         redirect_to login_implicit_path + "?api_key=#{api_key}&redirect_url=#{CGI.escape(redirect_url)}"
+      if params[:current_user]
+         # Logged in user was clicked, redirect to app
+         # Check if the user is logged in on the website
+         begin
+            user = Dav::Auth.login_by_jwt(session[:jwt], api_key)
+            redirect_to "#{redirect_url}?jwt=#{user.jwt}"
+         rescue StandardError => e
+            session[:api_key] = api_key
+            session[:redirect_url] = redirect_url
+         end
+      else
+         # Another user was logged in, proceed normally
+         begin
+            auth = get_auth_object
+            
+            user = auth.login(email, password)
+            set_session(user)
+   
+            dev = Dav::Dev.get_by_api_key(auth, api_key)
+            dev_auth = Dav::Auth.new(api_key: dev.api_key, 
+                                    secret_key: dev.secret_key,
+                                    uuid: dev.uuid,
+                                    environment: Rails.env)
+            user2 = dev_auth.login(email, password)
+   
+            session[:api_key] = nil
+            session[:redirect_url] = nil
+            
+            redirect_to "#{redirect_url}?jwt=#{user2.jwt}"
+         rescue StandardError => e
+            flash[:danger] = replace_error_message(e.message)
+            redirect_to login_implicit_path + "?api_key=#{api_key}&redirect_url=#{CGI.escape(redirect_url)}"
+         end
       end
    end
 
@@ -112,6 +118,7 @@ class UsersController < ApplicationController
 
    def show
       @user = Dav::User.get(session[:jwt], session[:user_id])
+      @avatar_url = ENV["DAV_BLOB_STORAGE_BASE_URL"] + @user.id.to_s + ".png"
    end
 
    def update
