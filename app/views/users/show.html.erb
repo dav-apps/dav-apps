@@ -126,7 +126,21 @@
 
          <div id="apps-menu">
             <h1 align="center" class="mb-3">Your Apps</h1>
-            <%= render 'layouts/messages' %>
+				<%= render 'layouts/messages' %>
+				
+				<div class="d-flex flex-column justify-content-center mb-4 mt-3" style="margin: 0 auto; width: 60%;">
+					<div class="progress">
+						<% total_used_storage_percent = percentage_of(@user.used_storage, @user.total_storage) %>
+						<div class="progress-bar" role="progressbar" style="width: <%= total_used_storage_percent %>%" aria-valuenow="<%= total_used_storage_percent %>" aria-valuemin="0" aria-valuemax="100"></div>
+					</div>
+					
+					<p><%= bytes_to_gigabytes(@user.used_storage) %> GB used of <%= bytes_to_gigabytes(@user.total_storage) %> GB</p>
+					<% if @user.plan == 0 && total_used_storage_percent > 0.8 %>
+					<small style="margin-top: -15px">
+						Need more? Upgrade to <a href="#plans">Plus</a>
+					</small>
+					<% end %>
+				</div>
 
             <% if @user.apps.length == 0 %>
                <div class="jumbotron mt-3" style="background: #f4f4f4; padding: 35px;">
