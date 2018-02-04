@@ -1,12 +1,20 @@
 class ApplicationController < ActionController::Base
 	protect_from_forgery with: :exception
-	helper_method :get_auth_object, :logged_in?, :require_user, :login_implicit_page?
+	helper_method :get_auth_object, :logged_in?, :require_user, :login_implicit_page?, :percentage_of, :bytes_to_gigabytes
 
   	def get_auth_object
     	Dav::Auth.new(api_key: ENV["DAV_API_KEY"], 
 							secret_key: ENV["DAV_SECRET_KEY"],
 							uuid: ENV["DAV_UUID"],
 							environment: Rails.env)
+	end
+
+	def percentage_of(a, b)
+		(a.to_f / b.to_f) * 100.0
+	end
+
+	def bytes_to_gigabytes(bytes)
+		(bytes.to_f / 1000.0 / 1000.0 / 1000.0).round
 	end
 
 	def logged_in?

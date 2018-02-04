@@ -137,12 +137,27 @@
                </div>
             <% end %>
 
-            <div class="list-group">
+            <div class="list-group" id="accordion">
                <% @user.apps.each do |app| %>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <li class="list-group-item d-flex justify-content-between align-items-center" style="cursor: pointer;" id="app-header-<%= app.id %>"
+                        data-toggle="collapse" data-target="#collapse-<%= app.id %>" aria-expanded="false" aria-controls="collapse-<%= app.id %>">
                      <h4><%= app.name %></h4>
-                     <%= link_to "Remove", "#delete-app-data-modal-#{app.id}", :class => "btn btn-danger", "data-toggle" => "modal" %>
+                     <%= fa_icon "angle-down 2x" %>
                   </li>
+
+                  <div class="card">
+                     <div id="collapse-<%= app.id %>" class="collapse" aria-labelledby="app-header-<%= app.id %>" data-parent="#accordion">
+                        <div class="card-body">
+                           <div class="progress">
+                              <% used_storage_percent = percentage_of(app.used_storage, @user.total_storage) %>
+                              <div class="progress-bar" role="progressbar" style="width: <%= used_storage_percent %>%" aria-valuenow="<%= used_storage_percent %>" aria-valuemin="0" aria-valuemax="100"></div>
+                           </div>
+                           <p>This app uses <%= bytes_to_gigabytes(app.used_storage) %> GB of <%= bytes_to_gigabytes(@user.total_storage) %> GB.</p>
+
+                           <%= link_to "Remove", "#delete-app-data-modal-#{app.id}", :class => "btn btn-danger", "data-toggle" => "modal" %>
+                        </div>
+                     </div>
+                  </div>
 
                   <div class="modal fade" id="delete-app-data-modal-<%= app.id %>" tabindex="-1" role="dialog">
                      <div class="modal-dialog" role="document">
@@ -163,7 +178,6 @@
                         </div>
                      </div>
                   </div>
-
                <% end %>
             </div>
          </div>
