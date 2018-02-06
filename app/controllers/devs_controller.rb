@@ -4,6 +4,22 @@ class DevsController < ApplicationController
 		@dev = Dav::Dev.get(session[:jwt])
 	end
 
+	def create_app
+		name = params[:name]
+		description = params[:description]
+		puts name
+		puts description
+
+		begin
+			app = Dav::App.create(session[:jwt], name, description)
+			redirect_to dev_path
+		rescue StandardError => e
+			puts replace_error_message(e.message)
+			flash[:danger] = replace_error_message(e.message)
+			redirect_to dev_path
+		end
+	end
+
 	def show
 		@app = Dav::App.get(session[:jwt], params[:id])
 	end
@@ -15,6 +31,7 @@ class DevsController < ApplicationController
 			table = Dav::Table.create(session[:jwt], name, params[:id])
 			redirect_to show_app_path(params[:id])
 		rescue StandardError => e
+			puts replace_error_message(e.message)
 			flash[:danger] = replace_error_message(e.message)
 			redirect_to show_app_path(params[:id])
 		end

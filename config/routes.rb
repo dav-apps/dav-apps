@@ -33,6 +33,7 @@ Rails.application.routes.draw do
 
 	# DevsController
 	get 'dev', to: 'devs#index'
+	post 'dev', to: 'devs#create_app'
 	get 'dev/:id', to: 'devs#show', as: 'show_app'
 	post 'dev/:id', to: 'devs#create_table'
 	get 'dev/:id/table/:name', to: 'devs#show_table', as: 'show_table'
