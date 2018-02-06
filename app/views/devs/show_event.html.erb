@@ -1,0 +1,7 @@
+<div class="container content">
+   <h1 align="center"><%= @event.name %></h1>
+
+   <% @event.logs.each do |log| %>
+      <%= log["id"] %>
+   <% end %>
+</div>

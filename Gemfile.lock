@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Dav2070/dav-gem.git
-  revision: 02c64b0ca39d45ed0a5aa310e55179293ce11aff
+  revision: 70675f32ab626dd3cf2d71ac2b8a4aaedd7b3685
   specs:
     dav (0.1.2)
 
@@ -183,7 +183,7 @@ GEM
     turbolinks (5.1.0)
       turbolinks-source (~> 5.1)
     turbolinks-source (5.1.0)
-    tzinfo (1.2.4)
+    tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (4.1.5)
       execjs (>= 0.3.0, < 3)

@@ -30,4 +30,10 @@ Rails.application.routes.draw do
 
 	# AppsController
 	get 'apps', to: 'apps#index'
+
+	# DevsController
+	get 'dev', to: 'devs#index'
+	get 'dev/:id', to: 'devs#show', as: 'show_app'
+	get 'dev/:id/table/:name', to: 'devs#show_table', as: 'show_table'
+	get 'dev/:id/event/:name', to: 'devs#show_event', as: 'show_event'
 end

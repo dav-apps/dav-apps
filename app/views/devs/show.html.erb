@@ -1,0 +1,16 @@
+<div class="container content">
+   <h1 align="center"><%= @app.name %></h1>
+
+   <h2 class="mt-3">Tables</h2>
+   <div class="list-group">
+		<% @app.tables.each do |table| %>
+			<%= link_to table.name, show_table_path(name: table.name), class: "list-group-item list-group-item-action" %>
+		<% end %>
+   </div>
+
+	<!-- Events -->
+	<h2 class="mt-3">Events</h2>
+	<% @app.events.each do |event| %>
+		<%= link_to event.name, show_event_path(name: event.name), class: "list-group-item list-group-item-action" %>
+	<% end %>
+</div>

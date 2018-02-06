@@ -1,0 +1,21 @@
+<div class="container content">
+   <h1 align="center">Your Apps</h1>
+   <div class="row justify-content-center" style="margin-top: 20px">
+
+      <% @dev.apps.each do |app| %>
+         <div class="card bg-light mb-3 col-12" style="max-width: 20rem; margin: 5px">
+            <%= link_to show_app_path(app.id), class: "no-link-deco" do %>
+               <div class="card-body">
+                  <h4 class="card-title" align="center"><%= app.name %></h4>
+               </div>
+            <% end %>
+         </div>
+      <% end %>
+
+      <div class="card bg-light mb-3 col-12" style="max-width: 20rem; margin: 5px">
+         <div class="card-body">
+            <h2 class="card-title" align="center">+</h2>
+         </div>
+      </div>
+   </div>
+</div>
