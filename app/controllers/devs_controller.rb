@@ -8,6 +8,18 @@ class DevsController < ApplicationController
 		@app = Dav::App.get(session[:jwt], params[:id])
 	end
 
+	def create_table
+		name = params[:name]
+
+		begin
+			table = Dav::Table.create(session[:jwt], name, params[:id])
+			redirect_to show_app_path(params[:id])
+		rescue StandardError => e
+			flash[:danger] = replace_error_message(e.message)
+			redirect_to show_app_path(params[:id])
+		end
+	end
+
 	def show_table
 		@table = Dav::Table.get(session[:jwt], params[:id], params[:name])
 		puts @table.name

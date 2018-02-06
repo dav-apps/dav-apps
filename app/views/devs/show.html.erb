@@ -6,6 +6,7 @@
 		<% @app.tables.each do |table| %>
 			<%= link_to table.name, show_table_path(name: table.name), class: "list-group-item list-group-item-action" %>
 		<% end %>
+		<p class="list-group-item list-group-item-action" style="font-weight: bold;" data-toggle="modal" data-target="#create-table-modal">+</p>
    </div>
 
 	<!-- Events -->
@@ -13,4 +14,33 @@
 	<% @app.events.each do |event| %>
 		<%= link_to event.name, show_event_path(name: event.name), class: "list-group-item list-group-item-action" %>
 	<% end %>
+</div>
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="create-table-modal">
+  	<div class="modal-dialog" role="document">
+    	<div class="modal-content">
+      	<div class="modal-header">
+        		<h5 class="modal-title">Create new table</h5>
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          		<span aria-hidden="true">&times;</span>
+        		</button>
+			</div>
+			<%= form_tag(show_app_path(params[:id]), class: "form-horizontal", method: "post", role: "form") do |f| %>
+      		<div class="modal-body">
+					<div class="form-group col-10 offset-1">
+						<%= label_tag :name, "Name", class: "col-sm-2 col-form-label" %>
+						<div class="col-sm-10">
+							<%= text_field_tag :name, nil, class: "form-control", placeholder: "Name" %>
+						</div>
+					</div>
+      		</div>
+				<div class="modal-footer">
+					<%= submit_tag("Create", class: "btn btn-primary") %>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			<% end %>
+    	</div>
+  	</div>
 </div>
