@@ -1,7 +1,12 @@
 <div class="container content">
    <h1 align="center"><%= @event.name %></h1>
 
-   <% @event.logs.each do |log| %>
-      <%= log["id"] %>
-   <% end %>
+   <%= area_chart @sorted_logs %>
+
+   <p>Sort by</p>
+   <div class="list-group">
+      <%= link_to "Day", show_event_path(params[:id], params[:name]) + "?sort_by=day", class: "list-group-item list-group-item-action", style: "width: 10%" %>
+      <%= link_to "Month", show_event_path(params[:id], params[:name]) + "?sort_by=month", class: "list-group-item list-group-item-action", style: "width: 10%" %>
+      <%= link_to "Year", show_event_path(params[:id], params[:name]) + "?sort_by=year", class: "list-group-item list-group-item-action", style: "width: 10%" %>
+   </div>
 </div>
