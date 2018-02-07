@@ -14,7 +14,8 @@ class UsersController < ApplicationController
       begin
          user = auth.login(email, password)
          set_session(user)
-
+         
+         log("login")
          redirect_to root_path
       rescue StandardError => e
          flash.now[:danger] = replace_error_message(e.message)
@@ -52,6 +53,8 @@ class UsersController < ApplicationController
          # Check if the user is logged in on the website
          begin
             user = Dav::Auth.login_by_jwt(session[:jwt], api_key)
+
+            log("login_implicit")
             redirect_to "#{redirect_url}?jwt=#{user.jwt}"
          rescue StandardError => e
             session[:api_key] = api_key

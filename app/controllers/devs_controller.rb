@@ -1,14 +1,19 @@
 class DevsController < ApplicationController
 
+	before_action :require_user
+
 	def index
-		@dev = Dav::Dev.get(session[:jwt])
+		begin
+			@dev = Dav::Dev.get(session[:jwt])
+		rescue StandardError => e
+			puts e.message
+			redirect_to root_path
+		end
 	end
 
 	def create_app
 		name = params[:name]
 		description = params[:description]
-		puts name
-		puts description
 
 		begin
 			app = Dav::App.create(session[:jwt], name, description)
@@ -39,7 +44,6 @@ class DevsController < ApplicationController
 
 	def show_table
 		@table = Dav::Table.get(session[:jwt], params[:id], params[:name])
-		puts @table.name
 	end
 
 	def show_event

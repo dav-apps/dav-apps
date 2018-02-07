@@ -17,5 +17,7 @@
 	  	<%= render 'layouts/navbar' if !current_page?(action: 'login_implicit', controller: 'users') %>
 		<%= yield %>
 		<%= render 'layouts/footer' if !current_page?(action: 'login_implicit', controller: 'users') %>
+
+		<% log("visit") %>
   	</body>
 </html>

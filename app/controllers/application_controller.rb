@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
 	protect_from_forgery with: :exception
-	helper_method :get_auth_object, :logged_in?, :require_user, :login_implicit_page?, :percentage_of, :bytes_to_gigabytes
+	helper_method :get_auth_object, :logged_in?, :require_user, :login_implicit_page?, :percentage_of, :bytes_to_gigabytes, :log
 
   	def get_auth_object
     	Dav::Auth.new(api_key: ENV["DAV_API_KEY"], 
@@ -39,6 +39,26 @@ class ApplicationController < ActionController::Base
 		session[:user_id] = user.id
 		session[:username] = user.username
 	end
+
+	def log(event_name)
+		if event_name == "visit"
+			if session[:ip] == nil || session[:ip] != request.remote_ip
+				session[:ip] = request.remote_ip
+				
+				begin
+					Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], event_name)
+				rescue Exception => e
+					puts e.message
+				end
+			end
+		else
+			begin
+				Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], event_name)
+			rescue Exception => e
+				puts e.message
+			end
+		end
+   end
 
 	def replace_error_message(error)
 		if error.include?("2801") || error.include?("1201")
