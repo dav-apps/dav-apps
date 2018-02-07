@@ -47,7 +47,7 @@ class DevsController < ApplicationController
 	end
 
 	def show_event
-		@event = Dav::Event.get_by_name(session[:jwt], params[:name])
+		@event = Dav::Event.get_by_name(session[:jwt], params[:name], params[:id])
 		sort_by = params["sort_by"]
 
 		@sorted_logs = Hash.new
