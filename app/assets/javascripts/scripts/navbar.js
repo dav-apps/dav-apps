@@ -3,6 +3,7 @@ $(function(){
    navbarCollapse();
    // Collapse the navbar when page is scrolled
    $(window).scroll(navbarCollapse);
+   $(window).on('resize', onSizeChange);
 });
 
 function navbarCollapse(){
@@ -12,3 +13,7 @@ function navbarCollapse(){
       $("#mainNav").css("background-color", "transparent");
    }
 };
+
+function onSizeChange(){
+   $('.navbar-collapse').collapse('hide');
+}

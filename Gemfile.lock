@@ -204,7 +204,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord-session_store
-  bootstrap (~> 4.0.0.beta3)
+  bootstrap (~> 4.0.0)
   byebug
   capybara (~> 2.13)
   chartkick

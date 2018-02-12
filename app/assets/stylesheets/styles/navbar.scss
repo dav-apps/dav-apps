@@ -3,7 +3,8 @@ $navbar-background-color: rgba(255, 255, 255, 0.87);
 #navbar-brand{
    color:black;
    font-size:35px;
-	font-weight:bold;
+   font-weight:bold;
+   margin-top: -6px;
 }
 
 .navbar{
@@ -22,6 +23,7 @@ $navbar-background-color: rgba(255, 255, 255, 0.87);
 
 .navigation-text{
    padding: 18px !important;
+   padding-top: 11px !important;
 }
 
 #mainNav{
