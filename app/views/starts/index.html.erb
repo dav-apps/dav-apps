@@ -25,11 +25,10 @@
 
 <div class="container-fluid" id="start-section-1">
 	<div class="content">
-
 		<%= render 'layouts/messages' %>
 		
 		<div class="row">
-			<div class="col-12 offset-1 col-md-8 offset-md-3 col-sm-12">
+			<div class="col-12 col-sm-6 offset-sm-3">
 				<h2 id="start-text-1">Find the apps for your needs</h2>
 				<%= link_to "Sign up", signup_path, class: "btn btn-secondary mt-2" %>
 				<%= link_to "Find Apps", apps_path, class: "btn btn-primary mt-2" %>
@@ -37,10 +36,10 @@
 		</div>
 	</div>
 </div>
-<div class="container-fluid" id="start-section-2">
+<div class="container-fluid start-section" id="start-section-2">
 	<div class="row">
 		<div class="col-md-6 col-sm-12" align="center">
-			<%= image_tag("zeichnung.png", :height => "150px", :id => "image-zeichnung") %>
+			<%= image_tag("zeichnung.png", :height => "150px", :id => "image-zeichnung", style: "height: 100%; width: 100%; object-fit: contain; max-width: 250px") %>
 		</div>
 		<div class="col-md-6 col-sm-12 start-description" id="start-description-1" align="center">
 			<h2>Anything in one place</h2>
@@ -48,7 +47,7 @@
 		</div>
 	</div>
 </div>
-<div class="container-fluid" id="start-section-3">
+<div class="container-fluid start-section" id="start-section-3">
 	<div class="row">
 		<div class="col-md-6 col-sm-12 start-description" align="center">
 			<h2>Platform independent</h2>
@@ -61,7 +60,7 @@
 		</div>
 	</div>
 </div>
-<div class="container-fluid" id="start-section-4">
+<div class="container-fluid start-section" id="start-section-4">
 	<div class="row">
 		<div class="col-md-6 col-sm-12" align="center">
 			<%= fa_icon "user-secret", style: "font-size: 90px; color: #535254", class: "m-2" %>
@@ -72,7 +71,7 @@
 		</div>
 	</div>
 </div>
-<div class="container-fluid" id="start-section-5">
+<div class="container-fluid start-section" id="start-section-5">
 	<div class="row">
 		<div class="col-10 offset-1 start-description" align="center">
 			<h3>Convinced?</h3>
