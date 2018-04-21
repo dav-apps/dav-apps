@@ -62,19 +62,29 @@ function setMenuVisibility(){
       $("#main-menu").hide();
       $("#plans-menu").show();
       $("#apps-menu").hide();
+      $("#archives-menu").hide();
 
       $("#plans-sidebar-entry").addClass("active");
    }else if(type == "apps"){
       $("#main-menu").hide();
       $("#plans-menu").hide();
       $("#apps-menu").show();
+      $("#archives-menu").hide();
 
       $("#apps-sidebar-entry").addClass("active");
+   }else if(type == "archives"){
+      $("#main-menu").hide();
+      $("#plans-menu").hide();
+      $("#apps-menu").hide();
+      $("#archives-menu").show();
+
+      $("#archives-sidebar-entry").addClass("active");
    }else{
       // Show main menu
       $("#main-menu").show();
       $("#plans-menu").hide();
       $("#apps-menu").hide();
+      $("#archives-menu").hide();
 
       $("#main-sidebar-entry").addClass("active");
    }

@@ -134,6 +134,7 @@ class UsersController < ApplicationController
       app_id = params[:app_id]
       avatar = params[:avatar]
       delete_account = params[:delete_account]
+      create_archive = params[:create_archive]
 
       if username
          if username == @user.username
@@ -198,10 +199,10 @@ class UsersController < ApplicationController
          begin
             @user.remove_app(app_id)
             flash[:success] = "The app was successfully removed!"
-            redirect_to user_path + "#apps"
+            redirect_to user_path(anchor: "apps")
          rescue StandardError => e
             flash[:danger] = replace_error_message(e.message)
-            redirect_to user_path + "#apps"
+            redirect_to user_path(anchor: "apps")
          end
       end
 
@@ -234,8 +235,14 @@ class UsersController < ApplicationController
             redirect_to user_path
          end
       end
-
-      if !username && !email && !password && !password_confirmation && !app_id && !delete_account && !avatar
+      
+      if create_archive
+         archive = Dav::Archive.create(@user.jwt)
+         flash[:success] = "You will get an email when your archive is ready."
+         redirect_to user_path(anchor: "archives")
+      end
+      
+      if !username && !email && !password && !password_confirmation && !app_id && !delete_account && !avatar && !create_archive
          redirect_to user_path
       end
    end
