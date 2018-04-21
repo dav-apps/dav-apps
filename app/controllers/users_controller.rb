@@ -135,6 +135,7 @@ class UsersController < ApplicationController
       avatar = params[:avatar]
       delete_account = params[:delete_account]
       create_archive = params[:create_archive]
+      archive_id = params[:archive_id]
 
       if username
          if username == @user.username
@@ -237,12 +238,32 @@ class UsersController < ApplicationController
       end
       
       if create_archive
-         archive = Dav::Archive.create(@user.jwt)
-         flash[:success] = "You will get an email when your archive is ready."
-         redirect_to user_path(anchor: "archives")
+         begin
+            archive = Dav::Archive.create(@user.jwt)
+            
+            flash[:success] = "You will get an email when your archive is ready."
+            redirect_to user_path(anchor: "archives")
+         rescue StandardError => e
+            flash[:danger] = replace_error_message(e.message)
+            redirect_to user_path(anchor: "archives")
+         end
+      end
+
+      if archive_id
+         # Remove the archive
+         begin
+            archive = Dav::Archive.get(@user.jwt, archive_id)
+            archive.delete(@user.jwt)
+   
+            flash[:success] = "The archive was successfully deleted."
+            redirect_to user_path(anchor: "archives")
+         rescue StandardError => e
+            flash[:danger] = replace_error_message(e.message)
+            redirect_to user_path(anchor: "archives")
+         end
       end
       
-      if !username && !email && !password && !password_confirmation && !app_id && !delete_account && !avatar && !create_archive
+      if !username && !email && !password && !password_confirmation && !app_id && !delete_account && !avatar && !create_archive && !archive_id
          redirect_to user_path
       end
    end
