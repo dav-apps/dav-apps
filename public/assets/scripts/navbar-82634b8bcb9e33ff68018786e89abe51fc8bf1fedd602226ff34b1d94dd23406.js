@@ -1,0 +1,1 @@
+function navbarCollapse(){100<$("#mainNav").offset().top?$("#mainNav").css("background-color","rgba(255, 255, 255, 0.87)"):$("#mainNav").css("background-color","transparent")}function onSizeChange(){$(".navbar-collapse").collapse("hide")}$(function(){navbarCollapse(),$(window).scroll(navbarCollapse),$(window).on("resize",onSizeChange)});
