@@ -1,11 +1,12 @@
 <div class="container">
    <footer class="footer">
       <small>
-         Copyright &copy; by dav.
+         Copyright &copy; 2018 by dav.
          All rights reserved
       </small>
       <nav>
          <ul>
+            <li><%= link_to "Contact", contact_path %></li>
             <li><%= link_to "Privacy Policy", privacy_path %></li>
             <li><%= link_to "Twitter", "http://www.twitter.com/dav_apps", target: "blank" %></li>
             <li><%= link_to "v#{ENV['VERSION_NUMBER']}", "https://github.com/Dav2070/dav-apps/releases", target: "blank" %></li>

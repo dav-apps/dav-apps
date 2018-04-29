@@ -18,6 +18,10 @@ class StartsController < ApplicationController
 
 	end
 
+	def contact
+
+	end
+
 	def pricing
 
 	end
