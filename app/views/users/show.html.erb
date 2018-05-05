@@ -111,23 +111,17 @@
 							</button>
 
 							<div class="collapse mt-3" id="collapse-upgrade-options">
-								<%= form_tag({upgrade_plus: true}) do %>
-									<script
-										src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-										data-key="<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>"
-										data-amount="300"
-										data-name="dav"
-										data-description="Upgrade to dav Plus"
-										data-image="https://abload.de/img/davdelta200x150z8r77.png"
-										data-locale="auto"
-										data-currency="eur"
-										data-email="<%= @user.email %>"
-										data-allow-remember-me="false">
-									</script>
-								<% end %>
+								<%= render 'shared/stripe-payment-form', user: @user, upgrade_plus: true %>
 							</div>
 						<% elsif @user.plan > 0 && @user.subscription_status == 0 %>
+							<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse-update-payment-info-options" aria-expanded="false" aria-controls="collapse-update-payment-info-options">
+								Change payment method
+							</button>
 							<%= link_to "Downgrade to Free", "#downgrade-to-free-modal", :class => "btn btn-danger", "data-toggle" => "modal" %>
+
+							<div class="collapse mt-3" id="collapse-update-payment-info-options">
+								<%= render 'shared/stripe-payment-form', user: @user, upgrade_plus: false %>
+							</div>
 						<% end %>
 						</div>
                </div>

@@ -135,7 +135,8 @@ class UsersController < ApplicationController
       avatar = params[:avatar]
       delete_account = params[:delete_account]
       create_archive = params[:create_archive]
-      archive_id = params[:archive_id]
+		archive_id = params[:archive_id]
+		update_payment_info = params[:update_payment_info]
 		upgrade_plus = params[:upgrade_plus]
 		downgrade_free = params[:downgrade_free]
 
@@ -257,8 +258,19 @@ class UsersController < ApplicationController
 			end
 			redirect_to user_path(anchor: "archives")
 		end
+
+		if update_payment_info == "true"
+			begin
+				@user.update({payment_token: params["stripeToken"]})
+
+				flash[:success] = "Your payment info was successfully updated"
+			rescue StandardError => e
+				flash[:danger] = replace_error_message(e.message)
+			end
+			redirect_to user_path(anchor: "plans")
+		end
 		
-		if upgrade_plus
+		if upgrade_plus == "true"
 			begin
             # Send a request to the api to update the plan
             @user.update({payment_token: params["stripeToken"], plan: 1})
@@ -283,7 +295,8 @@ class UsersController < ApplicationController
       
 		if !username && !email && !password && !password_confirmation && 
 			!app_id && !delete_account && !avatar && !create_archive && 
-			!archive_id && !upgrade_plus && !downgrade_free
+			!archive_id && !update_payment_info && !upgrade_plus && !downgrade_free
+
          redirect_to user_path
       end
    end

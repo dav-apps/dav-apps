@@ -1,0 +1,14 @@
+<%= form_tag({upgrade_plus: upgrade_plus, update_payment_info: !upgrade_plus}) do %>
+   <script
+      src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+      data-key="<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>"
+      data-amount="300"
+      data-name="dav"
+      data-description="<%= upgrade_plus ? "Upgrade to dav Plus" : "Update your payment information" %>"
+      data-image="https://abload.de/img/davdelta200x150z8r77.png"
+      data-locale="auto"
+      data-currency="eur"
+      data-email="<%= user.email %>"
+      data-allow-remember-me="false">
+   </script>
+<% end %>
