@@ -121,7 +121,7 @@ class UsersController < ApplicationController
 
    def show
       @user = Dav::User.get(session[:jwt], session[:user_id])
-      @avatar_url = ENV["DAV_BLOB_STORAGE_BASE_URL"] + @user.id.to_s + ".png"
+		@avatar_url = ENV["DAV_BLOB_STORAGE_BASE_URL"] + @user.id.to_s + ".png"
    end
 
    def update
@@ -136,6 +136,8 @@ class UsersController < ApplicationController
       delete_account = params[:delete_account]
       create_archive = params[:create_archive]
       archive_id = params[:archive_id]
+		upgrade_plus = params[:upgrade_plus]
+		downgrade_free = params[:downgrade_free]
 
       if username
          if username == @user.username
@@ -147,11 +149,10 @@ class UsersController < ApplicationController
             begin
                @user.update({username: username})
                flash[:success] = "Your new username was saved successfully!"
-               redirect_to user_path
             rescue StandardError => e
                flash[:danger] = replace_error_message(e.message)
-               redirect_to user_path
-            end
+				end
+				redirect_to user_path
          end
       end
 
@@ -165,11 +166,10 @@ class UsersController < ApplicationController
             begin
                @user.update({email: email})
                flash[:success] = "We sent you an email to your new email address to confirm it."
-               redirect_to user_path
             rescue StandardError => e
                flash[:danger] = replace_error_message(e.message)
-               redirect_to user_path
-            end
+				end
+				redirect_to user_path
          end
       end
 
@@ -187,11 +187,10 @@ class UsersController < ApplicationController
             begin
                @user.update({password: password})
                flash[:success] = "You will receive an email to confirm your new password."
-               redirect_to user_path
             rescue StandardError => e
                flash[:danger] = replace_error_message(e.message)
-               redirect_to user_path
-            end
+				end
+				redirect_to user_path
          end
       end
 
@@ -200,22 +199,20 @@ class UsersController < ApplicationController
          begin
             @user.remove_app(app_id)
             flash[:success] = "The app was successfully removed!"
-            redirect_to user_path(anchor: "apps")
          rescue StandardError => e
             flash[:danger] = replace_error_message(e.message)
-            redirect_to user_path(anchor: "apps")
-         end
+			end
+			redirect_to user_path(anchor: "apps")
       end
 
       if delete_account
          begin
             Dav::User.send_delete_account_email(@user.email)
             flash[:success] = "You will receive an email to delete your account."
-            redirect_to user_path
          rescue StandardError => e
             flash[:danger] = replace_error_message(e.message)
-            redirect_to user_path
-         end
+			end
+			redirect_to user_path
       end
 
       if avatar
@@ -242,11 +239,10 @@ class UsersController < ApplicationController
             archive = Dav::Archive.create(@user.jwt)
             
             flash[:success] = "You will get an email when your archive is ready."
-            redirect_to user_path(anchor: "archives")
          rescue StandardError => e
             flash[:danger] = replace_error_message(e.message)
-            redirect_to user_path(anchor: "archives")
-         end
+			end
+			redirect_to user_path(anchor: "archives")
       end
 
       if archive_id
@@ -256,14 +252,38 @@ class UsersController < ApplicationController
             archive.delete(@user.jwt)
    
             flash[:success] = "The archive was successfully deleted."
-            redirect_to user_path(anchor: "archives")
          rescue StandardError => e
             flash[:danger] = replace_error_message(e.message)
-            redirect_to user_path(anchor: "archives")
-         end
-      end
+			end
+			redirect_to user_path(anchor: "archives")
+		end
+		
+		if upgrade_plus
+			begin
+            # Send a request to the api to update the plan
+            @user.update({payment_token: params["stripeToken"], plan: 1})
+
+				flash[:success] = "Your successfully upgraded to Plus"
+			rescue StandardError => e
+				flash[:danger] = replace_error_message(e.message)
+			end
+			redirect_to user_path(anchor: "plans")
+		end
+
+		if downgrade_free
+			begin
+				@user.update({plan: 0})
+
+				flash[:success] = "Your plan was successfully changed"
+			rescue StandardError => e
+				flash[:danger] = replace_error_message(e.message)
+			end
+			redirect_to user_path(anchor: "plans")
+		end
       
-      if !username && !email && !password && !password_confirmation && !app_id && !delete_account && !avatar && !create_archive && !archive_id
+		if !username && !email && !password && !password_confirmation && 
+			!app_id && !delete_account && !avatar && !create_archive && 
+			!archive_id && !upgrade_plus && !downgrade_free
          redirect_to user_path
       end
    end

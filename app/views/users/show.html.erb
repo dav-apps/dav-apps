@@ -80,11 +80,56 @@
             <%= render 'layouts/messages' %>
 
             <div class="row">
-               <div class="col-12 offset-1">
-                  <h5>Your current plan: <%= @user.plan == 0 ? "Free" : "Plus" %></h5>
+               <div class="col-12 offset-1 row">
                   <%= hidden_field_tag :plan, @user.plan %>
 
-                  <%= link_to "Change your plan", "#change-plan-modal", :class => "btn btn-primary", "data-toggle" => "modal" %>
+						<div class="col-12">
+							<table class="table table-borderless table-sm mt-3 borderless" style="width: 350px; border: 0px !important">
+								<tbody style="font-size: 20px">
+									<tr>
+										<td>Your Plan</td>
+										<td><%= @user.plan == 0 ? "Free" : "Plus" %></td>
+									</tr>
+									<% if @user.plan == 1 && @user.period_end %>
+									<tr>
+										<td>
+											<%=
+											@user.subscription_status == 1 ? "Subscription end" : "Next payment" 
+											%>
+										</td>
+										<td><%= DateTime.parse(@user.period_end).strftime("%d %B %Y") %></td>
+									</tr>
+									<% end %>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="col-12">
+						<% if @user.plan == 0 %>
+							<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse-upgrade-options" aria-expanded="false" aria-controls="collapse-upgrade-options">
+								Upgrade to Plus
+							</button>
+
+							<div class="collapse mt-3" id="collapse-upgrade-options">
+								<%= form_tag({upgrade_plus: true}) do %>
+									<script
+										src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+										data-key="<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>"
+										data-amount="300"
+										data-name="dav"
+										data-description="Upgrade to dav Plus"
+										data-image="https://abload.de/img/davdelta200x150z8r77.png"
+										data-locale="auto"
+										data-currency="eur"
+										data-email="<%= @user.email %>"
+										data-allow-remember-me="false">
+									</script>
+								<% end %>
+							</div>
+						<% elsif @user.plan > 0 && @user.subscription_status == 0 %>
+							<%= link_to "Downgrade to Free", "#downgrade-to-free-modal", :class => "btn btn-danger", "data-toggle" => "modal" %>
+						<% end %>
+						</div>
                </div>
             </div>
 
@@ -231,39 +276,6 @@
    </div>
 </div>
 
-<div class="modal fade" id="change-plan-modal" tabindex="-1" role="dialog">
-   <div class="modal-dialog" role="document">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title">Change your plan</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-            </button>
-         </div>
-         <div class="modal-body row">
-            <div class="col-4">
-               <%= form_tag(user_path, class: "form-horizontal row mt-4", method: "post", role: "form") do |f| %>
-                  <div class="form-group col-10 offset-1">
-                     <label for="select-plan">Choose your plan</label>
-                     <select class="form-control" id="select-plan">
-                        <option>Free</option>
-                        <option>Plus</option>
-                     </select>
-                  </div>
-                  <div class="form-group col-10 offset-1" id="payment-form">
-                     <p>Credit card form</p>
-                  </div>
-               <% end %>
-            </div>
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-primary disabled" id="update-button">Update</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-         </div>
-      </div>
-   </div>
-</div>
-
 <div class="modal fade" id="delete-account-modal" tabindex="-1" role="dialog">
    <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -299,6 +311,27 @@
          </div>
 			<div class="modal-footer">
          	<%= button_to 'Create archive', {:controller => "users", :action => "update", :create_archive => true}, :method=>:post, class: "btn btn-primary" %>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+         </div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="downgrade-to-free-modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+				<h5 class="modal-title">Downgrade to Free</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+			</div>
+			<div class="modal-body">
+            <p>Are you sure you want to downgrade to the Free plan?</p>
+				<p>Your subscription will run until <%= DateTime.parse(@user.period_end).strftime("%d %B %Y") if @user.period_end %>, but it will not be renewed after that.</p>
+         </div>
+			<div class="modal-footer">
+         	<%= button_to 'Downgrade', {:controller => "users", :action => "update", :downgrade_free => true}, :method=>:post, class: "btn btn-danger" %>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
          </div>
 		</div>

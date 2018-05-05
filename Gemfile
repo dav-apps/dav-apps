@@ -21,7 +21,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 
 # Bootstrap and Jquery
-gem 'bootstrap', '~> 4.0.0'
+gem 'bootstrap', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'sprockets'
 
@@ -36,6 +36,9 @@ gem 'activerecord-session_store'
 
 # Displaying charts
 gem "chartkick"
+
+# Stripe for payments
+gem 'stripe'
 
 group :development, :test do
 	# Call 'byebug' anywhere in the code to stop execution and get a debugger console
