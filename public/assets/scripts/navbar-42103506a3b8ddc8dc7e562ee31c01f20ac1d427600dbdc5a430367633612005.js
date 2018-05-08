@@ -1,1 +1,0 @@
-function navbarCollapse(){$("#mainNav").offset().top>100?$("#mainNav").css("background-color","rgba(255, 255, 255, 0.87)"):$("#mainNav").css("background-color","transparent")}$(function(a){navbarCollapse(),a(window).scroll(navbarCollapse)});
