@@ -105,7 +105,8 @@ class UsersController < ApplicationController
 
       begin
          if password == password_confirmation
-            auth.signup(email, password, username)
+				auth.signup(email, password, username)
+				log("signup")
 
             flash[:success] = "Thanks for signing up! You will receive an email to activate your account."
             redirect_to root_path
