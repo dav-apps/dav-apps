@@ -50,9 +50,12 @@ class DevsController < ApplicationController
 		@event = Dav::Event.get_by_name(session[:jwt], params[:name], params[:id])
 		sort_by = params["sort_by"]
 
-		@sorted_logs = Hash.new
+		@sorted_date_logs = Hash.new
+		@sorted_data_logs = Hash.new
+
 		@event.logs.each do |log|
 			log_date = log["created_at"].to_date
+			log_data = log["data"]
 
 			if sort_by == "year"
 				date = "#{log_date.year}"
@@ -63,10 +66,18 @@ class DevsController < ApplicationController
 				date = "#{log_date.month}.#{log_date.day}.#{log_date.year}"
 			end
 
-			if @sorted_logs[date]	# If the date exists, add one to the value of the date
-				@sorted_logs[date] = @sorted_logs[date] + 1
+			if @sorted_date_logs[date]	# If the date exists, add one to the value of the date
+				@sorted_date_logs[date] = @sorted_date_logs[date] + 1
 			else
-				@sorted_logs[date] = 1
+				@sorted_date_logs[date] = 1
+			end
+
+			if log_data
+				if @sorted_data_logs[log_data] 
+					@sorted_data_logs[log_data] = @sorted_data_logs[log_data] + 1
+				else
+					@sorted_data_logs[log_data] = 1
+				end
 			end
 		end
 	end
