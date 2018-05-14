@@ -9,13 +9,13 @@ class UsersController < ApplicationController
    def login_action
       email = params[:email]
       password = params[:password]
-      auth = get_auth_object
+		auth = get_auth_object
 
       begin
          user = auth.login(email, password)
          set_session(user)
          
-         log("login")
+         log("login", get_country_code)
          redirect_to root_path
       rescue StandardError => e
          flash.now[:danger] = replace_error_message(e.message)
@@ -54,14 +54,14 @@ class UsersController < ApplicationController
          begin
             user = Dav::Auth.login_by_jwt(session[:jwt], api_key)
 
-            log("login_implicit")
+            log("login_implicit", get_country_code)
             redirect_to "#{redirect_url}?jwt=#{user.jwt}"
          rescue StandardError => e
             session[:api_key] = api_key
             session[:redirect_url] = redirect_url
          end
       else
-         # Another user was logged in, proceed normally
+         # Another user has logged in
          begin
             auth = get_auth_object
             
@@ -76,7 +76,8 @@ class UsersController < ApplicationController
             user2 = dev_auth.login(email, password)
    
             session[:api_key] = nil
-            session[:redirect_url] = nil
+				session[:redirect_url] = nil
+				log("login_implicit", get_country_code)
             
             redirect_to "#{redirect_url}?jwt=#{user2.jwt}"
          rescue StandardError => e
@@ -106,7 +107,7 @@ class UsersController < ApplicationController
       begin
          if password == password_confirmation
 				auth.signup(email, password, username)
-				log("signup")
+				log("signup", get_country_code)
 
             flash[:success] = "Thanks for signing up! You will receive an email to activate your account."
             redirect_to root_path

@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
 	protect_from_forgery with: :exception
-	helper_method :get_auth_object, :logged_in?, :require_user, :login_implicit_page?, :percentage_of, :bytes_to_gigabytes, :log
+	helper_method :get_auth_object, :logged_in?, :require_user, :login_implicit_page?, :percentage_of, :bytes_to_gigabytes, :log_visit
 
   	def get_auth_object
     	Dav::Auth.new(api_key: ENV["DAV_API_KEY"], 
@@ -15,6 +15,22 @@ class ApplicationController < ActionController::Base
 
 	def bytes_to_gigabytes(bytes)
 		(bytes.to_f / 1000.0 / 1000.0 / 1000.0).round
+	end
+
+	def get_country_code
+		require 'iplocate'
+
+		if session[:country_code]
+			country_code = session[:country_code]
+		elsif session[:ip]
+			country_code = IPLocate.lookup(session[:ip])["country_code"]
+			session[:country_code] = country_code
+		else
+			country_code = IPLocate.lookup(request.remote_ip)["country_code"]
+			session[:country_code] = country_code
+		end
+
+		return country_code
 	end
 
 	def logged_in?
@@ -40,23 +56,25 @@ class ApplicationController < ActionController::Base
 		session[:username] = user.username
 	end
 
-	def log(event_name)
-		if event_name == "visit"
-			if session[:ip] == nil || session[:ip] != request.remote_ip
-				session[:ip] = request.remote_ip
-				
-				begin
-					Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], event_name)
-				rescue Exception => e
-					puts e.message
-				end
-			end
-		else
+	def log_visit
+		if !session[:ip] || session[:ip] != request.remote_ip
+			
+			session[:ip] = request.remote_ip
+			session[:country_code] = nil
+			
 			begin
-				Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], event_name)
+				Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], "visit", get_country_code)
 			rescue Exception => e
 				puts e.message
 			end
+		end
+	end
+
+	def log(event_name, data)
+		begin
+			Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], event_name, data)
+		rescue Exception => e
+			puts e.message
 		end
    end
 
