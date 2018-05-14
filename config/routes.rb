@@ -39,4 +39,5 @@ Rails.application.routes.draw do
 	post 'dev/:id', to: 'devs#create_table'
 	get 'dev/:id/table/:name', to: 'devs#show_table', as: 'show_table'
 	get 'dev/:id/event/:name', to: 'devs#show_event', as: 'show_event'
+	post 'dev/:id/event/:name', to: 'devs#set_event_period'
 end
