@@ -2,13 +2,13 @@
    <h1 align="center"><%= @event.name %></h1>
 
    <%= area_chart @sorted_date_logs %>
-
    <%= pie_chart @sorted_data_logs %>
 
    <div class="row mt-4">
 		<div class="col-4">
 			<h5>Sort by</h5>
 			<div class="list-group mt-4">
+				<%= link_to "Hour", show_event_path(params[:id], params[:name], sort_by: "hour", period: params[:period]), class: "list-group-item list-group-item-action" %>
 				<%= link_to "Day", show_event_path(params[:id], params[:name], sort_by: "day", period: params[:period]), class: "list-group-item list-group-item-action" %>
 				<%= link_to "Month", show_event_path(params[:id], params[:name], sort_by: "month", period: params[:period]), class: "list-group-item list-group-item-action" %>
 				<%= link_to "Year", show_event_path(params[:id], params[:name], sort_by: "year", period: params[:period]), class: "list-group-item list-group-item-action" %>

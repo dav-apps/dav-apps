@@ -122,4 +122,43 @@ class ApplicationController < ActionController::Base
 			error
 		end
 	end
+
+	class RailsDateRange < Range
+		require 'active_support/all'
+		# step is similar to DateTime#advance argument
+		def every(step, &block)
+			c_time = self.begin.to_datetime
+			finish_time = self.end.to_datetime
+			foo_compare = self.exclude_end? ? :< : :<=
+
+			arr = []
+			while c_time.send( foo_compare, finish_time) do 
+				arr << c_time
+				c_time = c_time.advance(step)
+			end
+
+			return arr
+		end
+	end
+
+	def RailsDateRange(range)
+		RailsDateRange.new(range.begin, range.end, range.exclude_end?)
+	end
+
+
+	def format_hour(date)
+		"#{date.day}.#{date.month}.#{date.year} #{date.strftime("%k")}"
+	end
+
+	def format_day(date)
+		"#{date.day}.#{date.month}.#{date.year}"
+	end
+
+	def format_month(date)
+		"#{date.strftime("%B")} #{date.year}"
+	end
+
+	def format_year(date)
+		"#{date.year}"
+	end
 end
