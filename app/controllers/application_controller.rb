@@ -20,9 +20,9 @@ class ApplicationController < ActionController::Base
 	def get_country_code
 		require 'iplocate'
 
-		if session[:country_code]
+		if session[:country_code] != nil
 			country_code = session[:country_code]
-		elsif session[:ip]
+		elsif session[:ip] != nil
 			country_code = IPLocate.lookup(session[:ip])["country_code"]
 			session[:country_code] = country_code
 		else
@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
 	end
 
 	def log_visit
-		if !session[:ip] || session[:ip] != request.remote_ip
+		if session[:ip] == nil || session[:ip] != request.remote_ip
 			
 			session[:ip] = request.remote_ip
 			session[:country_code] = nil
