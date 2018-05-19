@@ -18,15 +18,13 @@ class ApplicationController < ActionController::Base
 	end
 
 	def get_country_code
-		require 'iplocate'
-
 		if session[:country_code] != nil
 			country_code = session[:country_code]
 		elsif session[:ip] != nil
-			country_code = IPLocate.lookup(session[:ip])["country_code"]
+			country_code = JSON.parse(IpinfoIo::lookup(session[:ip]).body)["country"]
 			session[:country_code] = country_code
 		else
-			country_code = IPLocate.lookup(request.remote_ip)["country_code"]
+			country_code = JSON.parse(IpinfoIo::lookup(request.remote_ip).body)["country"]
 			session[:country_code] = country_code
 		end
 

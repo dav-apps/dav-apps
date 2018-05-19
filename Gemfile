@@ -38,7 +38,7 @@ gem 'activerecord-session_store'
 gem "chartkick"
 
 # IP location
-gem 'iplocate'
+gem 'ipinfo_io', github: "ipinfo/ruby"
 
 group :development, :test do
 	# Call 'byebug' anywhere in the code to stop execution and get a debugger console
