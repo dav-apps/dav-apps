@@ -18,14 +18,19 @@ class ApplicationController < ActionController::Base
 	end
 
 	def get_country_code
-		if session[:country_code] != nil
-			country_code = session[:country_code]
-		elsif session[:ip] != nil
-			country_code = JSON.parse(IpinfoIo::lookup(session[:ip]).body)["country"]
-			session[:country_code] = country_code
-		else
-			country_code = JSON.parse(IpinfoIo::lookup(request.remote_ip).body)["country"]
-			session[:country_code] = country_code
+		begin
+			if session[:country_code] != nil
+				country_code = session[:country_code]
+			elsif session[:ip] != nil
+				country_code = JSON.parse(IpinfoIo::lookup(session[:ip]).body)["country"]
+				session[:country_code] = country_code
+			else
+				country_code = JSON.parse(IpinfoIo::lookup(request.remote_ip).body)["country"]
+				session[:country_code] = country_code
+			end
+		rescue => e
+			puts e.message
+			country_code = nil
 		end
 
 		return country_code
