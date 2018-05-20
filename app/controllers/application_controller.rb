@@ -18,22 +18,26 @@ class ApplicationController < ActionController::Base
 	end
 
 	def get_country_code
-		begin
-			if session[:country_code] != nil
-				country_code = session[:country_code]
-			elsif session[:ip] != nil
-				country_code = JSON.parse(IpinfoIo::lookup(session[:ip]).body)["country"]
-				session[:country_code] = country_code
-			else
-				country_code = JSON.parse(IpinfoIo::lookup(request.remote_ip).body)["country"]
-				session[:country_code] = country_code
+		if !browser.bot?
+			begin
+				if session[:country_code] != nil
+					country_code = session[:country_code]
+				elsif session[:ip] != nil
+					country_code = JSON.parse(IpinfoIo::lookup(session[:ip]).body)["country"]
+					session[:country_code] = country_code
+				else
+					country_code = JSON.parse(IpinfoIo::lookup(request.remote_ip).body)["country"]
+					session[:country_code] = country_code
+				end
+			rescue => e
+				puts e.message
+				country_code = nil
 			end
-		rescue => e
-			puts e.message
-			country_code = nil
-		end
 
-		return country_code
+			return country_code
+		else
+			return nil
+		end
 	end
 
 	def logged_in?
@@ -60,7 +64,7 @@ class ApplicationController < ActionController::Base
 	end
 
 	def log_visit
-		if session[:ip] == nil || session[:ip] != request.remote_ip
+		if (session[:ip] == nil || session[:ip] != request.remote_ip) && !browser.bot?
 			
 			session[:ip] = request.remote_ip
 			session[:country_code] = nil
@@ -74,10 +78,12 @@ class ApplicationController < ActionController::Base
 	end
 
 	def log(event_name, data)
-		begin
-			Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], event_name, data)
-		rescue Exception => e
-			puts e.message
+		if !browser.bot?
+			begin
+				Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], event_name, data)
+			rescue Exception => e
+				puts e.message
+			end
 		end
    end
 
