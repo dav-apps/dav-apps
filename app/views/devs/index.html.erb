@@ -1,25 +1,26 @@
-<div class="container content">
-   <h1 align="center">Your Apps</h1>
-   <div class="row justify-content-center" style="margin-top: 20px">
+<div class="container content row mx-auto">
+   <h1 class="mx-auto">Your Apps</h1>
+   <div class="row justify-content-center mt-4">
 
       <% @dev.apps.each do |app| %>
          <div class="card bg-light mb-3 col-12" style="max-width: 20rem; margin: 5px">
             <%= link_to show_app_path(app.id), class: "no-link-deco" do %>
-               <div class="card-body">
-                  <h4 class="card-title" align="center"><%= app.name %></h4>
+               <div class="card-body row">
+                  <h4 class="card-title mx-auto my-2"><%= app.name %></h4>
                </div>
             <% end %>
          </div>
       <% end %>
 
       <div class="card bg-light mb-3 col-12" style="max-width: 20rem; margin: 5px" data-toggle="modal" data-target="#create-app-modal">
-         <div class="card-body">
-            <h2 class="card-title" align="center">+</h2>
+         <div class="card-body row">
+            <h2 class="card-title mx-auto">+</h2>
          </div>
       </div>
    </div>
-</div>
 
+   <%= link_to "General information", show_general_path, class: "btn btn-secondary mx-auto mt-3" %>
+</div>
 
 
 <div class="modal fade" tabindex="-1" role="dialog" id="create-app-modal">

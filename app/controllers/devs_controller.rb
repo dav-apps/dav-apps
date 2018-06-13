@@ -7,6 +7,7 @@ class DevsController < ApplicationController
 			@dev = Dav::Dev.get(session[:jwt])
 		rescue StandardError => e
 			puts e.message
+			flash[:danger] = "There was an error: " + e.message
 			redirect_to root_path
 		end
 	end
@@ -23,6 +24,122 @@ class DevsController < ApplicationController
 			flash[:danger] = replace_error_message(e.message)
 			redirect_to dev_path
 		end
+	end
+
+	def general
+		begin
+			@users = Dav::Analytics.get_users(session[:jwt])["users"]
+			@plan_count = Hash.new
+
+			# Sort for the users chart
+			default_period = 10 * 365 * 24 * 60 * 60		# 10 years
+			sort_by = params["sort_by"]
+			period = params["period"] ? params["period"] : default_period
+			period_start = Time.now - period.to_i
+
+			@sorted_users_period = Hash.new
+			users_period = Array.new
+
+			# Remove all logs that are outside the period
+			@users.each do |user|
+				user_date = DateTime.parse(user["created_at"])
+
+				if user_date > period_start
+					users_period.push(user)
+				end
+			end
+
+			# Set the plan count
+			@plan_count["Free"] = 0
+			@plan_count["Plus"] = 0
+			users_period.each do |user|
+				plan = user["plan"]
+				if plan == 0
+					@plan_count["Free"] += 1
+				elsif plan == 1
+					@plan_count["Plus"] += 1
+				end
+			end
+
+			@new_users_count = users_period.count
+
+			if users_period.count == 0
+				return
+			end
+
+			start_date = DateTime.parse(users_period.first["created_at"])
+			first_date = DateTime.parse(@users.first["created_at"])
+			end_date = DateTime.now
+
+			if sort_by == "year"
+				@sorted_users_period[format_year(start_date)] = 0
+				@sorted_users_period[format_year(end_date)] = 0
+
+				RailsDateRange(start_date..end_date + 1.years).every(years: 1).each do |date|
+					@sorted_users_period[format_year(date)] = 0
+	
+					@users.each do |user|
+						if (first_date..date).cover?(user["created_at"])
+							@sorted_users_period[format_year(date)] += 1
+						end
+					end
+				end
+			elsif sort_by == "day"
+				@sorted_users_period[format_day(start_date)] = 0
+				@sorted_users_period[format_day(end_date)] = 0
+
+				RailsDateRange(start_date..end_date + 1.day).every(days: 1).each do |date|
+					@sorted_users_period[format_day(date)] = 0
+	
+					@users.each do |user|
+						if (first_date..date).cover?(user["created_at"])
+							@sorted_users_period[format_day(date)] += 1
+						end
+					end
+				end
+			elsif sort_by == "hour"
+				@sorted_users_period[format_hour(start_date)] = 0
+				@sorted_users_period[format_hour(end_date)] = 0
+
+				RailsDateRange(start_date..end_date + 1.hour).every(hours: 1).each do |date|
+					@sorted_users_period[format_hour(date)] = 0
+	
+					@users.each do |user|
+						if (first_date..date).cover?(user["created_at"])
+							@sorted_users_period[format_hour(date)] += 1
+						end
+					end
+				end
+			else	# Sort by month
+				@sorted_users_period[format_month(start_date)] = 0
+				@sorted_users_period[format_month(end_date)] = 0
+
+				RailsDateRange(start_date..end_date + 1.months).every(months: 1).each do |date|
+					@sorted_users_period[format_month(date)] = 0
+	
+					@users.each do |user|
+						if (first_date..date).cover?(user["created_at"])
+							@sorted_users_period[format_month(date)] += 1
+						end
+					end
+				end
+			end
+			
+		rescue StandardError => e
+			puts e.message
+			flash[:danger] = "There was an error: " + e.message
+			redirect_to root_path
+		end
+	end
+
+	def set_general_period
+		period_length = params[:period].to_i
+		period_format = params[:period_format]
+		sort_by = params[:sort_by]
+
+		period = convert_period_to_timestamp(period_format, period_length)
+
+		redirect_to show_general_path(sort_by: sort_by, period: period)
 	end
 
 	def show
@@ -138,6 +255,13 @@ class DevsController < ApplicationController
 		period_format = params[:period_format]
 		sort_by = params[:sort_by]
 
+		period = convert_period_to_timestamp(period_format, period_length)
+
+		redirect_to show_event_path(sort_by: sort_by, period: period)
+	end
+
+	private
+	def convert_period_to_timestamp(period_format, period_length)
 		case period_format
 			when "Hours"
 				period = period_length * 60 * 60
@@ -153,6 +277,6 @@ class DevsController < ApplicationController
 				period = period_length * 7 * 24 * 60 * 60
 		end
 
-		redirect_to show_event_path(sort_by: sort_by, period: period)
+		return period
 	end
 end

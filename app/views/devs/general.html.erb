@@ -1,0 +1,43 @@
+<div class="container content">
+   <h1 class="text-center">General information</h1>
+
+   <h3 align="center" class="my-4">Users</h3>
+   <%= area_chart @sorted_users_period %>
+
+	<p class="font-weight-light mt-3 mb-0">New users: <%= @new_users_count %></p>
+	<p class="font-weight-light">Total users: <%= @users.count %></p>
+
+	<div class="row mt-4">
+		<div class="col-4">
+			<h5>Sort by</h5>
+			<div class="list-group mt-4">
+				<%= link_to "Hour", show_general_path(sort_by: "hour", period: params[:period]), class: "list-group-item list-group-item-action" %>
+				<%= link_to "Day", show_general_path(sort_by: "day", period: params[:period]), class: "list-group-item list-group-item-action" %>
+				<%= link_to "Month", show_general_path(sort_by: "month", period: params[:period]), class: "list-group-item list-group-item-action" %>
+				<%= link_to "Year", show_general_path(sort_by: "year", period: params[:period]), class: "list-group-item list-group-item-action" %>
+			</div>
+		</div>
+
+		<div class="col-6 offset-2">
+			<h5>Period</h5>
+			<%= form_tag(show_general_path, class: "form-horizontal mt-4", method: "post", role: "form") do |f| %>
+				<div class="form-group row">
+					<div class="col-6">
+						<%= number_field_tag :period, nil, class: "form-control" %>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-6">
+						<%= select_tag :period_format, options_for_select(['Hours', 'Days', 'Weeks', 'Months', 'Years'], 'Weeks') %>
+						<br>
+						<%= hidden_field_tag :sort_by, params[:sort_by] %>
+						<%= submit_tag("Update", class: "btn btn-primary btn-md mt-4") %>
+					</div>
+				</div>
+			<% end %>
+		</div>
+	</div>
+
+   <h3 align="center" class="my-4">Plans</h3>
+   <%= pie_chart @plan_count %>
+</div>
