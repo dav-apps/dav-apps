@@ -208,6 +208,17 @@ class DevsController < ApplicationController
 		end
 	end
 
+	def set_general_app_period
+		period_length = params[:period].to_i
+		period_format = params[:period_format]
+		sort_by = params[:sort_by]
+		id = params[:id]
+
+		period = convert_period_to_timestamp(period_format, period_length)
+
+		redirect_to show_general_app_path(id: id, sort_by: sort_by, period: period)
+	end
+
 	private
 	def convert_period_to_timestamp(period_format, period_length)
 		case period_format
