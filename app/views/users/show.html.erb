@@ -140,7 +140,7 @@
 						<div class="progress-bar" role="progressbar" style="width: <%= total_used_storage_percent %>%" aria-valuenow="<%= total_used_storage_percent %>" aria-valuemin="0" aria-valuemax="100"></div>
 					</div>
 					
-					<p><%= bytes_to_gigabytes(@user.used_storage) %> GB used of <%= bytes_to_gigabytes(@user.total_storage) %> GB</p>
+					<p><%= bytes_to_gigabytes(@user.used_storage, 1) %> GB used of <%= bytes_to_gigabytes(@user.total_storage, 0) %> GB</p>
 					<% if @user.plan == 0 && total_used_storage_percent > 0.8 %>
 					<small style="margin-top: -15px">
 						Need more? Upgrade to <a href="#plans">Plus</a>
@@ -172,7 +172,7 @@
                               <% used_storage_percent = percentage_of(app.used_storage, @user.total_storage) %>
                               <div class="progress-bar" role="progressbar" style="width: <%= used_storage_percent %>%" aria-valuenow="<%= used_storage_percent %>" aria-valuemin="0" aria-valuemax="100"></div>
                            </div>
-                           <p>This app uses <%= bytes_to_gigabytes(app.used_storage) %> GB of <%= bytes_to_gigabytes(@user.total_storage) %> GB.</p>
+                           <p>This app uses <%= bytes_to_gigabytes(app.used_storage, 1) %> GB of <%= bytes_to_gigabytes(@user.total_storage, 0) %> GB.</p>
 
                            <%= link_to "Remove", "#delete-app-data-modal-#{app.id}", :class => "btn btn-danger", "data-toggle" => "modal" %>
                         </div>
@@ -206,7 +206,7 @@
 				<h1 align="center" class="mb-3">Your Archives</h1>
 				<%= render 'layouts/messages' %>
 
-				<p class="text-dark text-center font-weight-light" style="font-size: 18px">Create an archive that contains all of your data and files that we have stored about you.
+				<p class="text-dark text-center font-weight-light" style="font-size: 18px">Create an archive that contains all your data and files that we have stored about you.
 					Each archive can be downloaded within one month and will be deleted afterwards.</p>
 
 				<%= link_to "Create archive", "#create-archive-modal", :class => "btn btn-secondary", "data-toggle" => "modal" %>

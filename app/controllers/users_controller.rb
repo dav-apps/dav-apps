@@ -219,13 +219,13 @@ class UsersController < ApplicationController
       end
 
       if avatar
-         begin
+			begin
             if File.size(avatar.tempfile) < 5000000
                file = File.open(avatar.tempfile, "rb")
                contents = Base64.encode64(file.read)
 
                @user.update({avatar: contents})
-               flash[:success] = "Avatar was successfully uploaded."
+               flash[:success] = "Avatar was successfully uploaded. It may take some time to update across the site and your apps."
                redirect_to user_path
             else
                flash[:danger] = "The file is too large."

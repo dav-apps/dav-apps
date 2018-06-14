@@ -13,8 +13,9 @@ class ApplicationController < ActionController::Base
 		(a.to_f / b.to_f) * 100.0
 	end
 
-	def bytes_to_gigabytes(bytes)
-		(bytes.to_f / 1000.0 / 1000.0 / 1000.0).round
+	def bytes_to_gigabytes(bytes, rounding)
+		result = (bytes.to_f / 1000.0 / 1000.0 / 1000.0).round(rounding)
+		return result == 0 ? 0 : result
 	end
 
 	def get_country_code
