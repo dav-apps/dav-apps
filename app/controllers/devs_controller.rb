@@ -249,7 +249,11 @@ class DevsController < ApplicationController
 			return [sorted_time, users_period]
 		end
 
-		first_date = DateTime.parse(source_array.first[time_field_name])
+		if !source_array.first[time_field_name]
+			first_date = DateTime.parse(source_array.second[time_field_name])
+		else
+			first_date = DateTime.parse(source_array.first[time_field_name])
+		end
 		start_date = DateTime.parse(users_period.first[time_field_name])
 		end_date = DateTime.now
 
