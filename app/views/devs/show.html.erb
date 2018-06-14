@@ -14,6 +14,8 @@
 	<% @app.events.each do |event| %>
 		<%= link_to event.name, show_event_path(name: event.name), class: "list-group-item list-group-item-action" %>
 	<% end %>
+
+	<%= link_to "General information", show_general_app_path, class: "btn btn-secondary mx-auto mt-3" %>
 </div>
 
 

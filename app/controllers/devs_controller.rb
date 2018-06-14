@@ -35,24 +35,14 @@ class DevsController < ApplicationController
 			default_period = 10 * 365 * 24 * 60 * 60		# 10 years
 			sort_by = params["sort_by"]
 			period = params["period"] ? params["period"] : default_period
-			period_start = Time.now - period.to_i
 
-			@sorted_users_period = Hash.new
-			users_period = Array.new
-
-			# Remove all logs that are outside the period
-			@users.each do |user|
-				user_date = DateTime.parse(user["created_at"])
-
-				if user_date > period_start
-					users_period.push(user)
-				end
-			end
+			sorted_arrays = count_time_cumulatively(period, sort_by, @users, "created_at")
+			@sorted_array = sorted_arrays[0]
 
 			# Set the plan count
 			@plan_count["Free"] = 0
 			@plan_count["Plus"] = 0
-			users_period.each do |user|
+			@users.each do |user|
 				plan = user["plan"]
 				if plan == 0
 					@plan_count["Free"] += 1
@@ -61,70 +51,7 @@ class DevsController < ApplicationController
 				end
 			end
 
-			@new_users_count = users_period.count
-
-			if users_period.count == 0
-				return
-			end
-
-			start_date = DateTime.parse(users_period.first["created_at"])
-			first_date = DateTime.parse(@users.first["created_at"])
-			end_date = DateTime.now
-
-			if sort_by == "year"
-				@sorted_users_period[format_year(start_date)] = 0
-				@sorted_users_period[format_year(end_date)] = 0
-
-				RailsDateRange(start_date..end_date + 1.years).every(years: 1).each do |date|
-					@sorted_users_period[format_year(date)] = 0
-	
-					@users.each do |user|
-						if (first_date..date).cover?(user["created_at"])
-							@sorted_users_period[format_year(date)] += 1
-						end
-					end
-				end
-			elsif sort_by == "day"
-				@sorted_users_period[format_day(start_date)] = 0
-				@sorted_users_period[format_day(end_date)] = 0
-
-				RailsDateRange(start_date..end_date + 1.day).every(days: 1).each do |date|
-					@sorted_users_period[format_day(date)] = 0
-	
-					@users.each do |user|
-						if (first_date..date).cover?(user["created_at"])
-							@sorted_users_period[format_day(date)] += 1
-						end
-					end
-				end
-			elsif sort_by == "hour"
-				@sorted_users_period[format_hour(start_date)] = 0
-				@sorted_users_period[format_hour(end_date)] = 0
-
-				RailsDateRange(start_date..end_date + 1.hour).every(hours: 1).each do |date|
-					@sorted_users_period[format_hour(date)] = 0
-	
-					@users.each do |user|
-						if (first_date..date).cover?(user["created_at"])
-							@sorted_users_period[format_hour(date)] += 1
-						end
-					end
-				end
-			else	# Sort by month
-				@sorted_users_period[format_month(start_date)] = 0
-				@sorted_users_period[format_month(end_date)] = 0
-
-				RailsDateRange(start_date..end_date + 1.months).every(months: 1).each do |date|
-					@sorted_users_period[format_month(date)] = 0
-	
-					@users.each do |user|
-						if (first_date..date).cover?(user["created_at"])
-							@sorted_users_period[format_month(date)] += 1
-						end
-					end
-				end
-			end
-			
+			@new_users_count = sorted_arrays[1].count
 		rescue StandardError => e
 			puts e.message
 			flash[:danger] = "There was an error: " + e.message
@@ -260,6 +187,27 @@ class DevsController < ApplicationController
 		redirect_to show_event_path(sort_by: sort_by, period: period)
 	end
 
+	def general_app
+		begin
+			@app = Dav::App.get(session[:jwt], params[:id])
+			@analytics = Dav::Analytics.get_app(session[:jwt], params[:id])
+
+			# Sort for the users chart
+			default_period = 10 * 365 * 24 * 60 * 60		# 10 years
+			sort_by = params["sort_by"]
+			period = params["period"] ? params["period"] : default_period
+
+			sorted_arrays = count_time_cumulatively(period, sort_by, @analytics["users"], "started_using")
+
+			@sorted_time = sorted_arrays[0]
+			@new_users_count = sorted_arrays[1].count
+		rescue => e
+			puts e.message
+			flash[:danger] = "There was an error: " + e.message
+			redirect_to root_path
+		end
+	end
+
 	private
 	def convert_period_to_timestamp(period_format, period_length)
 		case period_format
@@ -278,5 +226,87 @@ class DevsController < ApplicationController
 		end
 
 		return period
+	end
+
+	def count_time_cumulatively(period, sort_by, source_array, time_field_name)
+		period_start = Time.now - period.to_i
+
+		sorted_time = Hash.new
+		users_period = Array.new
+
+		# Remove all logs that are outside the period
+		source_array.each do |user|
+			if user[time_field_name]
+				user_date = DateTime.parse(user[time_field_name])
+
+				if user_date > period_start
+					users_period.push(user)
+				end
+			end
+		end
+
+		if users_period.count == 0
+			return [sorted_time, users_period]
+		end
+
+		first_date = DateTime.parse(source_array.first[time_field_name])
+		start_date = DateTime.parse(users_period.first[time_field_name])
+		end_date = DateTime.now
+
+		if sort_by == "year"
+			sorted_time[format_year(start_date)] = 0
+			sorted_time[format_year(end_date)] = 0
+
+			RailsDateRange(start_date..end_date + 1.years).every(years: 1).each do |date|
+				sorted_time[format_year(date)] = 0
+
+				source_array.each do |user|
+					if (first_date..date).cover?(user[time_field_name])
+						sorted_time[format_year(date)] += 1
+					end
+				end
+			end
+		elsif sort_by == "day"
+			sorted_time[format_day(start_date)] = 0
+			sorted_time[format_day(end_date)] = 0
+
+			RailsDateRange(start_date..end_date + 1.day).every(days: 1).each do |date|
+				sorted_time[format_day(date)] = 0
+
+				source_array.each do |user|
+					if (first_date..date).cover?(user[time_field_name])
+						sorted_time[format_day(date)] += 1
+					end
+				end
+			end
+		elsif sort_by == "hour"
+			sorted_time[format_hour(start_date)] = 0
+			sorted_time[format_hour(end_date)] = 0
+
+			RailsDateRange(start_date..end_date + 1.hour).every(hours: 1).each do |date|
+				sorted_time[format_hour(date)] = 0
+
+				source_array.each do |user|
+					if (first_date..date).cover?(user[time_field_name])
+						sorted_time[format_hour(date)] += 1
+					end
+				end
+			end
+		else	# Sort by month
+			sorted_time[format_month(start_date)] = 0
+			sorted_time[format_month(end_date)] = 0
+
+			RailsDateRange(start_date..end_date + 1.months).every(months: 1).each do |date|
+				sorted_time[format_month(date)] = 0
+
+				source_array.each do |user|
+					if (first_date..date).cover?(user[time_field_name])
+						sorted_time[format_month(date)] += 1
+					end
+				end
+			end
+		end
+		
+		return [sorted_time, users_period]
 	end
 end

@@ -1,0 +1,9 @@
+<div class="container content">
+   <h1 class="text-center"><%= @app.name %></h1>
+
+   <h3 align="center" class="my-4">Users</h3>
+   <%= area_chart @sorted_time %>
+
+	<p class="font-weight-light mt-3 mb-0">New users: <%= @new_users_count %></p>
+	<p class="font-weight-light">Total users: <%= @analytics.count %></p>
+</div>
