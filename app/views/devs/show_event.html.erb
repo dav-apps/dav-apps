@@ -1,8 +1,75 @@
+<%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+
 <div class="container content">
-   <h1 align="center"><%= @event.name %></h1>
+   <h1 class="text-center"><%= @event.name %></h1>
 
    <%= area_chart @sorted_date_logs %>
-   <%= pie_chart @sorted_data_logs %>
+	<%= geo_chart @countries %>
+
+	<div class="row d-flex justify-content-center">
+		<% if @browser_with_version %>
+			<div class="my-5">
+				<h3 class="text-center">Browser with version</h3>
+				<%= pie_chart @browser_with_version %>
+			</div>
+		<% end %>
+
+		<% if @browser_without_version %>
+			<div class="my-5">
+				<h3 class="text-center">Browser</h3>
+				<%= pie_chart @browser_without_version %>
+			</div>
+		<% end %>
+
+		<% if @os_with_version %>
+			<div class="my-5">
+				<h3 class="text-center">Operating systems with version</h3>
+				<%= pie_chart @os_with_version %>
+			</div>
+		<% end %>
+
+		<% if @os_without_version %>
+			<div class="my-5">
+				<h3 class="text-center">Operating systems</h3>
+				<%= pie_chart @os_without_version %>
+			</div>
+		<% end %>
+
+		<% if @chrome_versions %>
+			<div class="my-5">
+				<h3 class="text-center">Chrome versions</h3>
+				<%= pie_chart @chrome_versions %>
+			</div>
+		<% end %>
+
+		<% if @firefox_versions %>
+			<div class="my-5">
+				<h3 class="text-center">Firefox versions</h3>
+				<%= pie_chart @firefox_versions %>
+			</div>
+		<% end %>
+
+		<% if @edge_versions %>
+			<div class="my-5">
+				<h3 class="text-center">Microsoft Edge versions</h3>
+				<%= pie_chart @edge_versions %>
+			</div>
+		<% end %>
+
+		<% if @windows_versions %>
+			<div class="my-5">
+				<h3 class="text-center">Windows versions</h3>
+				<%= pie_chart @windows_versions %>
+			</div>
+		<% end %>
+
+		<% if @android_versions %>
+			<div class="my-5">
+				<h3 class="text-center">Android versions</h3>
+				<%= pie_chart @android_versions %>
+			</div>
+		<% end %>
+	</div>
 
    <div class="row mt-4">
 		<div class="col-4">

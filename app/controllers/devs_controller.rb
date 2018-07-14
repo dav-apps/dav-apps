@@ -105,7 +105,7 @@ class DevsController < ApplicationController
 
 		# Remove all logs that are outside the period
 		@event.logs.each do |log|
-			log_date = DateTime.parse(log["created_at"])
+			log_date = DateTime.parse(log.created_at)
 
 			if log_date > period_start
 				event_logs.push(log)
@@ -117,8 +117,8 @@ class DevsController < ApplicationController
 		end
 
 		# Set every entry between the first date and the last date to 0
-		start_date = DateTime.parse(event_logs.first["created_at"])
-		end_date = DateTime.parse(event_logs.last["created_at"])
+		start_date = DateTime.parse(event_logs.first.created_at)
+		end_date = DateTime.parse(event_logs.last.created_at)
 
 		if sort_by == "year"
 			RailsDateRange(start_date..end_date).every(years: 1).each do |log|
@@ -150,9 +150,20 @@ class DevsController < ApplicationController
 			@sorted_date_logs[format_day(end_date)] = 0
 		end
 
+		@countries = Hash.new
+		@browser_with_version = Hash.new
+		@browser_without_version = Hash.new
+		@os_with_version = Hash.new
+		@os_without_version = Hash.new
+		@chrome_versions = Hash.new
+		@firefox_versions = Hash.new
+		@edge_versions = Hash.new
+		@windows_versions = Hash.new
+		@android_versions = Hash.new
+
 		event_logs.each do |log|
-			log_date = DateTime.parse(log["created_at"])
-			log_data = log["data"]
+			# Get the date
+			log_date = DateTime.parse(log.created_at)
 
 			if sort_by == "year"
 				date = format_year(log_date)
@@ -164,14 +175,60 @@ class DevsController < ApplicationController
 				date = format_day(log_date)
 			end
 
-			# Count the date up by one
 			@sorted_date_logs[date] = @sorted_date_logs[date] + 1
 
-			if log_data
-				if @sorted_data_logs[log_data] 
-					@sorted_data_logs[log_data] = @sorted_data_logs[log_data] + 1
-				else
-					@sorted_data_logs[log_data] = 1
+			# Get the country
+			country = log.properties["country"]
+			if country
+				@countries[country] ? @countries[country] = @countries[country] + 1 : @countries[country] = 1
+			end
+
+			# Get the browser
+			browser_name = log.properties["browser_name"]
+			browser_version = log.properties["browser_version"]
+
+			if browser_name && browser_version
+				# @browser_with_version
+				name = "#{browser_name} #{browser_version}"
+				@browser_with_version[name] ? @browser_with_version[name] = @browser_with_version[name] + 1 : @browser_with_version[name] = 1
+
+				# @browser_without_version
+				name = browser_name
+				@browser_without_version[name] ? @browser_without_version[name] = @browser_without_version[name] + 1 : @browser_without_version[name] = 1
+
+				name = "#{browser_name} #{browser_version}"
+				if browser_name.include? "Chrome"
+					# @chrome_versions
+					@chrome_versions[name] ? @chrome_versions[name] = @chrome_versions[name] + 1 : @chrome_versions[name] = 1
+				elsif browser_name.include? "Firefox"
+					# @firefox_versions
+					@firefox_versions[name] ? @firefox_versions[name] = @firefox_versions[name] + 1 : @firefox_versions[name] = 1
+				elsif browser_name.include? "Edge"
+					# @edge_versions
+					@edge_versions[name] ? @edge_versions[name] = @edge_versions[name] + 1 : @edge_versions[name] = 1
+				end
+			end
+
+			# Get the os
+			os_name = log.properties["os_name"]
+			os_version = log.properties["os_version"]
+
+			if os_name && os_version
+				# @os_with_version
+				name = "#{os_name} #{os_version}"
+				@os_with_version[name] ? @os_with_version[name] = @os_with_version[name] + 1 : @os_with_version[name] = 1
+
+				# @os_without_version
+				name = os_name
+				@os_without_version[name] ? @os_without_version[name] = @os_without_version[name] + 1 : @os_without_version[name] = 1
+
+				name = "#{os_name} #{os_version}"
+				if os_name.include?("Windows")
+					# @windows_versions
+					@windows_versions[name] ? @windows_versions[name] = @windows_versions[name] + 1 : @windows_versions[name] = 1
+				elsif os_name.include?("Android")
+					# @android_versions
+					@android_versions[name] ? @android_versions[name] = @android_versions[name] + 1 : @android_versions[name] = 1
 				end
 			end
 		end
