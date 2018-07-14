@@ -37,9 +37,6 @@ gem 'activerecord-session_store'
 # Displaying charts
 gem "chartkick"
 
-# IP location
-gem 'ipinfo_io', github: "ipinfo/ruby"
-
 # Browser detection
 gem 'browser'
 

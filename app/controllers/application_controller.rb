@@ -18,29 +18,6 @@ class ApplicationController < ActionController::Base
 		return result == 0 ? 0 : result
 	end
 
-	def get_country_code
-		if !browser.bot?
-			begin
-				if session[:country_code] != nil
-					country_code = session[:country_code]
-				elsif session[:ip] != nil
-					country_code = JSON.parse(IpinfoIo::lookup(session[:ip]).body)["country"]
-					session[:country_code] = country_code
-				else
-					country_code = JSON.parse(IpinfoIo::lookup(request.remote_ip).body)["country"]
-					session[:country_code] = country_code
-				end
-			rescue => e
-				puts e.message
-				country_code = nil
-			end
-
-			return country_code
-		else
-			return nil
-		end
-	end
-
 	def logged_in?
 		!session[:jwt].nil?
 	end
@@ -65,23 +42,23 @@ class ApplicationController < ActionController::Base
 	end
 
 	def log_visit
-		if (session[:ip] == nil || session[:ip] != request.remote_ip) && !browser.bot?
-			
+		if session[:ip] != request.remote_ip
+			# Log visit
+			log("visit")
 			session[:ip] = request.remote_ip
-			session[:country_code] = nil
-			
-			begin
-				Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], "visit", get_country_code)
-			rescue Exception => e
-				puts e.message
-			end
 		end
 	end
 
-	def log(event_name, data)
+	def log(event_name)
 		if !browser.bot?
+			properties = Hash.new
+			properties["browser_name"] = browser.name
+			properties["browser_version"] = browser.version
+			properties["os_name"] = browser.platform.name
+			properties["os_version"] = browser.platform.version
+
 			begin
-				Dav::Event.log(get_auth_object, ENV["DAV_APPS_APP_ID"], event_name, data)
+				Dav::Event.log(get_auth_object.api_key, ENV["DAV_APPS_APP_ID"], event_name, properties, true)
 			rescue Exception => e
 				puts e.message
 			end
