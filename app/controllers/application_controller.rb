@@ -58,7 +58,19 @@ class ApplicationController < ActionController::Base
 			properties["os_version"] = browser.platform.version
 
 			begin
-				Dav::Event.log(get_auth_object.api_key, ENV["DAV_APPS_APP_ID"], event_name, properties, true)
+				properties["country"] = JSON.parse(IpinfoIo::lookup(request.remote_ip).body)["country"]
+			rescue Exception => e
+			end
+			
+			# Remove properties with empty value
+			properties.each do |key, value|
+				if !value
+					properties.except!(key)
+				end
+			end
+
+			begin
+				Dav::Event.log(get_auth_object.api_key, ENV["DAV_APPS_APP_ID"], event_name, properties, false)
 			rescue Exception => e
 				puts e.message
 			end
