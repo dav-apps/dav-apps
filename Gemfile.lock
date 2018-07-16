@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Dav2070/dav-gem.git
-  revision: a02b3670cfc032424a84addbeb93b5aa0b99cddf
+  revision: cbaed277e82159e48d8a7ab19d1cf57869fc6850
   specs:
     dav (0.5)
 

@@ -91,13 +91,12 @@ class DevsController < ApplicationController
 	end
 
 	def show_event
-		@event = Dav::Event.get_by_name(session[:jwt], params[:name], params[:id])
-
 		default_period = 60 * 60 * 24 * 30	# Ca. one month
 		sort_by = params["sort_by"]
 		period = params["period"] ? params["period"] : default_period
-
 		period_start = Time.now - period.to_i
+
+		@event = Dav::Event.get_by_name(session[:jwt], params[:name], params[:id], period_start.strftime("%s"))
 
 		@sorted_date_logs = Hash.new
 		@sorted_data_logs = Hash.new
