@@ -223,7 +223,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<% @user.archives.each do |archive| %>
+						<% @archives.each do |archive| %>
 						<tr>
 							<td><%= archive.name %></td>
 							<td><%= Date.parse(archive.created_at).strftime("%d.%m.%Y") %></td>
@@ -241,6 +241,16 @@
 								<% end %>
 							</td>
 						</tr>
+						<% if archive.completed %>
+							<% archive.parts.each do |part| %>
+								<tr>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td><%= link_to part.name, ENV["API_BASE_URL"] + "auth/archive_part/#{part.id}?file=true&jwt=#{@user.jwt}" %></td>
+								</tr>
+							<% end %>
+						<% end %>
 
 						<div class="modal fade" id="delete-archive-modal-<%= archive.id %>" tabindex="-1" role="dialog">
 							<div class="modal-dialog" role="document">

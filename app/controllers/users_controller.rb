@@ -122,8 +122,13 @@ class UsersController < ApplicationController
    end
 
    def show
-      @user = Dav::User.get(session[:jwt], session[:user_id])
+		@user = Dav::User.get(session[:jwt], session[:user_id])
 		@avatar_url = ENV["DAV_BLOB_STORAGE_BASE_URL"] + @user.id.to_s + ".png"
+
+		@archives = Array.new
+		@user.archives.each do |archive|
+			@archives.push(Dav::Archive.get(@user.jwt, archive.id))
+		end
    end
 
    def update
