@@ -31,6 +31,15 @@ class DevsController < ApplicationController
 			@users = Dav::Analytics.get_users(session[:jwt])["users"]
 			@plan_count = Hash.new
 
+			@active_users_count = Hash.new
+			@daily_active_users = Dav::Analytics.get_active_users(session[:jwt], 0)["users"]
+			@monthly_active_users = Dav::Analytics.get_active_users(session[:jwt], 1)["users"]
+			@yearly_active_users = Dav::Analytics.get_active_users(session[:jwt], 2)["users"]
+
+			@active_users_count["Daily"] = @daily_active_users.count
+			@active_users_count["Monthly"] = @monthly_active_users.count
+			@active_users_count["Yearly"] = @yearly_active_users.count
+
 			# Sort for the users chart
 			default_period = 10 * 365 * 24 * 60 * 60		# 10 years
 			sort_by = params["sort_by"]
