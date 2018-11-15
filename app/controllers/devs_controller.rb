@@ -40,6 +40,18 @@ class DevsController < ApplicationController
 			@active_users_count["Monthly"] = @monthly_active_users.count
 			@active_users_count["Yearly"] = @yearly_active_users.count
 
+			@confirmed_users_count = Hash.new
+			@confirmed_users_count["Confirmed"] = 0
+			@confirmed_users_count["Unconfirmed"] = 0
+
+			@users.each do |user|
+				if user["confirmed"]
+					@confirmed_users_count["Confirmed"] += 1
+				else
+					@confirmed_users_count["Unconfirmed"] += 1
+				end
+			end
+
 			# Sort for the users chart
 			default_period = 10 * 365 * 24 * 60 * 60		# 10 years
 			sort_by = params["sort_by"]
