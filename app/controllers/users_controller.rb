@@ -378,28 +378,6 @@ class UsersController < ApplicationController
       end
    end
 
-   def resend_activation_email
-
-   end
-
-   def resend_activation_email_action
-      email = params[:email]
-
-      if email.length < 1
-         render 'resend_activation_email'
-      else
-         begin
-            Dav::User.send_verification_email(email)
-   
-            flash[:success] = "You should now receive another activation email."
-            redirect_to root_path
-         rescue StandardError => e
-            flash.now[:danger] = replace_error_message(e.message)
-            render 'resend_activation_email'
-         end
-      end
-   end
-
    def confirm_user
       id = params[:id]
       email_confirmation_token = params[:email_confirmation_token]
