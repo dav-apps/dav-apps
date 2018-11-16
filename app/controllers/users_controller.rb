@@ -404,15 +404,41 @@ class UsersController < ApplicationController
       id = params[:id]
       email_confirmation_token = params[:email_confirmation_token]
 
-      begin
-         Dav::User.confirm(id, email_confirmation_token)
-
-         flash[:success] = "Your email was successfully confirmed!"
-         redirect_to root_path
-      rescue StandardError => e
-         flash[:danger] = "There was an error. Please try again."
-         redirect_to root_path
+      # Check if the user is logged in
+      if logged_in? && id == session[:user_id].to_s
+         # If this is the same user, confirm the user
+         begin
+            Dav::User.confirm(id, email_confirmation_token, session[:jwt], nil)
+   
+            flash[:success] = "Your email was successfully confirmed!"
+            redirect_to root_path
+         rescue StandardError => e
+            flash[:danger] = "There was an error. Please try again."
+            redirect_to root_path
+         end
       end
+      # Show the password form
+   end
+
+   def confirm_user_action
+		id = params[:id]
+		email_confirmation_token = params[:email_confirmation_token]
+		password = params[:password]
+
+		begin
+			Dav::User.confirm(id, email_confirmation_token, nil, password)
+
+			flash[:success] = "Your email was successfully confirmed!"
+			redirect_to root_path
+		rescue StandardError => e
+			if e.message.include?("1201")
+				message = "Password is not correct"
+			else
+				message = replace_error_message(e.message)
+			end
+			flash[:danger] = message
+			redirect_to confirm_user_path
+		end
    end
 
    def change_email
