@@ -106,10 +106,10 @@ class UsersController < ApplicationController
 
       begin
          if password == password_confirmation
-				auth.signup(email, password, username)
+				user = auth.signup(email, password, username)
+				set_session(user)
 				log("signup")
 
-            flash[:success] = "Thanks for signing up! You will receive an email to activate your account."
             redirect_to root_path
          else
             flash.now[:danger] = "The password confirmation does not match your password."
@@ -145,7 +145,8 @@ class UsersController < ApplicationController
 		archive_id = params[:archive_id]
 		update_payment_info = params[:update_payment_info]
 		upgrade_plus = params[:upgrade_plus]
-		downgrade_free = params[:downgrade_free]
+      downgrade_free = params[:downgrade_free]
+      resend_confirmation_email = params[:resend_confirmation_email]
 
       if username
          if username == @user.username
@@ -298,11 +299,23 @@ class UsersController < ApplicationController
 				flash[:danger] = replace_error_message(e.message)
 			end
 			redirect_to user_path(anchor: "plans")
-		end
+      end
+      
+      if resend_confirmation_email
+         begin
+            Dav::User.send_verification_email(@user.email)
+            flash[:success] = "You will receive a new confirmation email"
+         rescue StandardError => e
+            flash.now[:danger] = replace_error_message(e.message)
+         end
+
+         redirect_to user_path(anchor: "plans")
+      end
       
 		if !username && !email && !password && !password_confirmation && 
 			!app_id && !delete_account && !avatar && !create_archive && 
-			!archive_id && !update_payment_info && !upgrade_plus && !downgrade_free
+         !archive_id && !update_payment_info && !upgrade_plus && !downgrade_free &&
+         !resend_confirmation_email
 
          redirect_to user_path
       end
@@ -394,7 +407,7 @@ class UsersController < ApplicationController
       begin
          Dav::User.confirm(id, email_confirmation_token)
 
-         flash[:success] = "Your account was successfully activated!"
+         flash[:success] = "Your email was successfully confirmed!"
          redirect_to root_path
       rescue StandardError => e
          flash[:danger] = "There was an error. Please try again."

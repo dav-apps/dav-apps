@@ -105,7 +105,7 @@
 						</div>
 
 						<div class="col-12">
-						<% if @user.plan == 0 %>
+						<% if @user.plan == 0 && @user.confirmed %>
 							<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse-upgrade-options" aria-expanded="false" aria-controls="collapse-upgrade-options">
 								Upgrade to Plus
 							</button>
@@ -122,7 +122,11 @@
 							<div class="collapse mt-3" id="collapse-update-payment-info-options">
 								<%= render 'shared/stripe-payment-form', user: @user, upgrade_plus: false %>
 							</div>
-						<% end %>
+						<% else %>
+                     <p style="font-size: 16px">Confirm your email address to change your plan and get more storage space
+                        <br><%= link_to "Resend confirmation email", {:controller => "users", :action => "update", :resend_confirmation_email => true}, :method => :post %>
+                     </p>
+                  <% end %>
 						</div>
                </div>
             </div>
@@ -141,11 +145,15 @@
 					</div>
 					
 					<p><%= bytes_to_gigabytes(@user.used_storage, 1) %> GB used of <%= bytes_to_gigabytes(@user.total_storage, 0) %> GB</p>
-					<% if @user.plan == 0 && total_used_storage_percent > 0.8 %>
+					<% if @user.plan == 0 && total_used_storage_percent > 80 %>
 					<small style="margin-top: -15px">
 						Need more? Upgrade to <a href="#plans">Plus</a>
 					</small>
-					<% end %>
+					<% elsif !@user.confirmed %>
+               <small style="margin-top: -15px">
+                  Need more? <a href="#plans">Confirm your email address</a>
+               </small>
+               <% end %>
 				</div>
 
             <% if @user.apps.length == 0 %>
