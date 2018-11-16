@@ -105,7 +105,11 @@
 						</div>
 
 						<div class="col-12">
-						<% if @user.plan == 0 && @user.confirmed %>
+						<% if !@user.confirmed %>
+							<p style="font-size: 16px">Confirm your email address to change your plan and get more storage space
+                        <br><%= link_to "Resend confirmation email", {:controller => "users", :action => "update", :resend_confirmation_email => true}, :method => :post %>
+                     </p>
+						<% elsif @user.plan == 0 %>
 							<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse-upgrade-options" aria-expanded="false" aria-controls="collapse-upgrade-options">
 								Upgrade to Plus
 							</button>
@@ -122,11 +126,7 @@
 							<div class="collapse mt-3" id="collapse-update-payment-info-options">
 								<%= render 'shared/stripe-payment-form', user: @user, upgrade_plus: false %>
 							</div>
-						<% else %>
-                     <p style="font-size: 16px">Confirm your email address to change your plan and get more storage space
-                        <br><%= link_to "Resend confirmation email", {:controller => "users", :action => "update", :resend_confirmation_email => true}, :method => :post %>
-                     </p>
-                  <% end %>
+						<% end %>
 						</div>
                </div>
             </div>
