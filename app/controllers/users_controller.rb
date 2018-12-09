@@ -94,7 +94,7 @@ class UsersController < ApplicationController
    end
 
    def signup
-
+		session[:redirect_url] = params[:redirect_url]
    end
 
    def signup_action
@@ -102,22 +102,26 @@ class UsersController < ApplicationController
       email = params[:email]
       password = params[:password]
       password_confirmation = params[:password_confirmation]
-      auth = get_auth_object
+		auth = get_auth_object
+		redirect_url = session[:redirect_url]
 
       begin
          if password == password_confirmation
 				user = auth.signup(email, password, username)
 				set_session(user)
 				log("signup")
+				new_redirect_url = "#{redirect_url}?jwt=#{user.jwt}"
 
-            redirect_to root_path
+            redirect_to redirect_url ? new_redirect_url : root_path
          else
-            flash.now[:danger] = "The password confirmation does not match your password."
-            render 'signup'
+				flash[:danger] = "The password confirmation does not match your password."
+				path = redirect_url ? signup_path(redirect_url: redirect_url) : signup_path
+				redirect_to path
          end
       rescue StandardError => e
-         flash.now[:danger] = replace_error_message(e.message)
-         render 'signup'
+         flash[:danger] = replace_error_message(e.message)
+			path = redirect_url ? signup_path(redirect_url: redirect_url) : signup_path
+			redirect_to path
       end
    end
 
