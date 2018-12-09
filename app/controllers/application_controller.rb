@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
 	protect_from_forgery with: :exception
-	helper_method :get_auth_object, :logged_in?, :require_user, :login_implicit_page?, :percentage_of, :bytes_to_gigabytes, :log_visit
+	helper_method :get_auth_object, :logged_in?, :require_user, :login_implicit_page?, :percentage_of, :bytes_to_gigabytes, :log_visit, :show_navbar_and_footer
 
   	def get_auth_object
     	Dav::Auth.new(api_key: ENV["DAV_API_KEY"], 
@@ -120,6 +120,10 @@ class ApplicationController < ActionController::Base
 		else
 			error
 		end
+	end
+
+	def show_navbar_and_footer(controller_name, action_name, params)
+		!(controller_name == "users" && action_name == "login_implicit") && !(controller_name == "users" && action_name == "signup" && params[:redirect_url])
 	end
 
 	class RailsDateRange < Range

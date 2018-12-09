@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 	post 'signup', to: 'users#signup_action'
 	get 'user', to: 'users#show'
 	post 'user', to: 'users#update'
+	get 'redirect', to: 'users#redirect'
 
 	get 'password_reset', to: 'users#password_reset'
 	post 'password_reset', to: 'users#password_reset_action'

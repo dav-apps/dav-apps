@@ -55,7 +55,7 @@ class UsersController < ApplicationController
             user = Dav::Auth.login_by_jwt(session[:jwt], api_key)
 
             log("login_implicit")
-            redirect_to "#{redirect_url}?jwt=#{user.jwt}"
+				redirect_to redirect_path(operation: "login", redirect_url: "#{redirect_url}?jwt=#{user.jwt}")
          rescue StandardError => e
             session[:api_key] = api_key
             session[:redirect_url] = redirect_url
@@ -79,7 +79,7 @@ class UsersController < ApplicationController
 				session[:redirect_url] = nil
 				log("login_implicit")
             
-            redirect_to "#{redirect_url}?jwt=#{user2.jwt}"
+				redirect_to redirect_path(operation: "login", redirect_url: "#{redirect_url}?jwt=#{user2.jwt}")
          rescue StandardError => e
             flash[:danger] = replace_error_message(e.message)
             redirect_to login_implicit_path + "?api_key=#{api_key}&redirect_url=#{CGI.escape(redirect_url)}"
@@ -112,7 +112,7 @@ class UsersController < ApplicationController
 				log("signup")
 				new_redirect_url = "#{redirect_url}?jwt=#{user.jwt}"
 
-            redirect_to redirect_url ? new_redirect_url : root_path
+				redirect_to redirect_path(operation: "signup", redirect_url: redirect_url ? new_redirect_url : root_path)
          else
 				flash[:danger] = "The password confirmation does not match your password."
 				path = redirect_url ? signup_path(redirect_url: redirect_url) : signup_path
@@ -323,7 +323,19 @@ class UsersController < ApplicationController
 
          redirect_to user_path
       end
-   end
+	end
+	
+	def redirect
+		operation = params[:operation]
+		redirect_url = params[:redirect_url]
+
+		if !operation || !redirect_url
+			redirect_to root_path
+		end
+
+		@message = "#{operation.capitalize} was successful. Please close this tab."
+		redirect_to redirect_url
+	end
 
 
    # Dev routes

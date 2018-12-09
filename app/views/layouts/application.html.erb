@@ -14,9 +14,9 @@
   	</head>
 
 	<body>
-		<%= render 'layouts/navbar' if !current_page?(action: 'login_implicit', controller: 'users') %>
+		<%= render 'layouts/navbar' if show_navbar_and_footer(controller_name, action_name, params) %>
 		<%= yield %>
-		<%= render 'layouts/footer' if !current_page?(action: 'login_implicit', controller: 'users') %>
+		<%= render 'layouts/footer' if show_navbar_and_footer(controller_name, action_name, params) %>
 
 		<% log_visit %>
   	</body>
