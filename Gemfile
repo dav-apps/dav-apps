@@ -7,7 +7,7 @@ end
 
 ruby '2.5.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.1'
+gem 'rails', '~> 5.2.2'
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 # Use SCSS for stylesheets
@@ -43,7 +43,7 @@ gem "chartkick"
 gem 'browser'
 
 # IP location
-gem 'ipinfo_io', github: "ipinfo/ruby"
+gem 'geocoder'
 
 group :development, :test do
 	# Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -53,7 +53,7 @@ group :development, :test do
 	gem 'selenium-webdriver'
 
 	# Use sqlite3 as the database for Active Record
-	gem 'sqlite3'
+	gem 'sqlite3', '1.3.13'
 
 	# Environment variables
 	gem 'dotenv-rails'

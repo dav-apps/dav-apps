@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
 			properties["os_version"] = browser.platform.version
 
 			begin
-				properties["country"] = JSON.parse(IpinfoIo::lookup(request.remote_ip).body)["country"]
+				properties["country"] = request.location.country
 			rescue Exception => e
 			end
 			
