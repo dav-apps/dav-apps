@@ -278,6 +278,7 @@ class DevsController < ApplicationController
 
 			@sorted_time = sorted_arrays[0]
 			@new_users_count = sorted_arrays[1].count
+			@total_users_count = @analytics["users"].count
 		rescue => e
 			puts e.message
 			flash[:danger] = "There was an error: " + e.message
@@ -347,7 +348,6 @@ class DevsController < ApplicationController
 
 		if sort_by == "year"
 			sorted_time[format_year(start_date)] = 0
-			sorted_time[format_year(end_date)] = 0
 
 			RailsDateRange(start_date..end_date + 1.years).every(years: 1).each do |date|
 				sorted_time[format_year(date)] = 0
@@ -360,7 +360,6 @@ class DevsController < ApplicationController
 			end
 		elsif sort_by == "day"
 			sorted_time[format_day(start_date)] = 0
-			sorted_time[format_day(end_date)] = 0
 
 			RailsDateRange(start_date..end_date + 1.day).every(days: 1).each do |date|
 				sorted_time[format_day(date)] = 0
@@ -373,7 +372,6 @@ class DevsController < ApplicationController
 			end
 		elsif sort_by == "hour"
 			sorted_time[format_hour(start_date)] = 0
-			sorted_time[format_hour(end_date)] = 0
 
 			RailsDateRange(start_date..end_date + 1.hour).every(hours: 1).each do |date|
 				sorted_time[format_hour(date)] = 0
@@ -386,7 +384,6 @@ class DevsController < ApplicationController
 			end
 		else	# Sort by month
 			sorted_time[format_month(start_date)] = 0
-			sorted_time[format_month(end_date)] = 0
 
 			RailsDateRange(start_date..end_date + 1.months).every(months: 1).each do |date|
 				sorted_time[format_month(date)] = 0
