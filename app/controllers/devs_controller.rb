@@ -125,7 +125,7 @@ class DevsController < ApplicationController
 
 		# Remove all logs that are outside the period
 		@event.logs.each do |log|
-			log_date = DateTime.parse(log.created_at)
+			log_date = DateTime.parse(log.time)
 
 			if log_date > period_start
 				event_logs.push(log)
@@ -137,8 +137,8 @@ class DevsController < ApplicationController
 		end
 
 		# Set every entry between the first date and the last date to 0
-		start_date = DateTime.parse(event_logs.first.created_at)
-		end_date = DateTime.parse(event_logs.last.created_at)
+		start_date = DateTime.parse(event_logs.first.time)
+		end_date = DateTime.parse(event_logs.last.time)
 
 		if sort_by == "year"
 			RailsDateRange(start_date..end_date).every(years: 1).each do |log|
@@ -183,7 +183,7 @@ class DevsController < ApplicationController
 
 		event_logs.each do |log|
 			# Get the date
-			log_date = DateTime.parse(log.created_at)
+			log_date = DateTime.parse(log.time)
 
 			if sort_by == "year"
 				date = format_year(log_date)
@@ -198,14 +198,14 @@ class DevsController < ApplicationController
 			@sorted_date_logs[date] = @sorted_date_logs[date] + 1
 
 			# Get the country
-			country = log.properties["country"]
+			country = get_value_from_property_count_array(log.properties, "country")
 			if country
 				@countries[country] ? @countries[country] = @countries[country] + 1 : @countries[country] = 1
 			end
 
 			# Get the browser
-			browser_name = log.properties["browser_name"]
-			browser_version = log.properties["browser_version"]
+			browser_name = get_value_from_property_count_array(log.properties, "browser_name")
+			browser_version = get_value_from_property_count_array(log.properties, "browser_version")
 
 			if browser_name && browser_version
 				# @browser_with_version
@@ -230,8 +230,8 @@ class DevsController < ApplicationController
 			end
 
 			# Get the os
-			os_name = log.properties["os_name"]
-			os_version = log.properties["os_version"]
+			os_name = get_value_from_property_count_array(log.properties, "os_name")
+			os_version = get_value_from_property_count_array(log.properties, "os_version")
 
 			if os_name && os_version
 				# @os_with_version
@@ -397,5 +397,15 @@ class DevsController < ApplicationController
 		end
 		
 		return [sorted_time, users_period]
+	end
+
+	def get_value_from_property_count_array(property_count_array, property_name)
+		value_array = property_count_array.select { |p| p["name"] == property_name }
+		
+		if value_array && value_array.count > 0
+			return value_array.first
+		else
+			return nil
+		end
 	end
 end
