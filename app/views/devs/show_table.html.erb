@@ -1,3 +1,8 @@
 <div class="container content">
-   <h1 align="center"><%= @table.name %></h1>
+   <h1 align="center">
+      <%= link_to show_app_path(params[:id]), class: "btn", style: "background-color: transparent; color: black" do %>
+			<%= fa_icon "arrow-left", style: "font-size: 20px;" %>
+		<% end %>
+      <%= @table.name %>
+   </h1>
 </div>

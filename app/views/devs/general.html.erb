@@ -1,5 +1,10 @@
 <div class="container content">
-   <h1 class="text-center">General information</h1>
+   <h1 class="text-center">
+		<%= link_to dev_path, class: "btn", style: "background-color: transparent; color: black" do %>
+			<%= fa_icon "arrow-left", style: "font-size: 20px;" %>
+		<% end %>
+		General information
+	</h1>
 
    <h3 align="center" class="my-4">Users</h3>
    <%= area_chart @sorted_array %>
