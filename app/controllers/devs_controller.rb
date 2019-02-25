@@ -113,11 +113,11 @@ class DevsController < ApplicationController
 
 	def show_event
 		default_period = 60 * 60 * 24 * 30	# Ca. one month
-		sort_by = params["sort_by"]
+		sort_by = params["sort_by"].to_s.empty? ? "day" : params["sort_by"]
 		period = params["period"] ? params["period"] : default_period
 		period_start = Time.now - period.to_i
 
-		@event = Dav::Event.get_by_name(session[:jwt], params[:name], params[:id], period_start.strftime("%s"))
+		@event = Dav::Event.get_by_name(session[:jwt], params[:name], params[:id], sort_by, period_start.strftime("%s"))
 
 		@sorted_date_logs = Hash.new
 		@sorted_data_logs = Hash.new
@@ -195,61 +195,73 @@ class DevsController < ApplicationController
 				date = format_day(log_date)
 			end
 
-			@sorted_date_logs[date] = @sorted_date_logs[date] + 1
+			@sorted_date_logs[date] = @sorted_date_logs[date] + log.total
 
 			# Get the country
-			country = get_value_from_property_count_array(log.properties, "country")
+			country = get_property_counts_by_name(log.properties, "country").first
 			if country
 				@countries[country] ? @countries[country] = @countries[country] + 1 : @countries[country] = 1
 			end
 
 			# Get the browser
-			browser_name = get_value_from_property_count_array(log.properties, "browser_name")
-			browser_version = get_value_from_property_count_array(log.properties, "browser_version")
-
-			if browser_name && browser_version
-				# @browser_with_version
+			browser_names = get_property_counts_by_name(log.properties, "browser_name")
+			browser_versions = get_property_counts_by_name(log.properties, "browser_version")
+			
+			i = 0
+			browser_names.each do |browser_name_hash|
+				browser_name = browser_name_hash["value"]
+				browser_version = browser_versions[i]["value"]
 				name = "#{browser_name} #{browser_version}"
-				@browser_with_version[name] ? @browser_with_version[name] = @browser_with_version[name] + 1 : @browser_with_version[name] = 1
+				count = browser_names[i]["count"]
 
-				# @browser_without_version
-				name = browser_name
-				@browser_without_version[name] ? @browser_without_version[name] = @browser_without_version[name] + 1 : @browser_without_version[name] = 1
+				# Increase the count of the browser in @browser_without_version
+				@browser_without_version[browser_name] ? @browser_without_version[browser_name] += count : @browser_without_version[browser_name] = count
 
-				name = "#{browser_name} #{browser_version}"
+				# Increase the count of the browser in @browser_with_version
+				@browser_with_version[name] ? @browser_with_version[name] += count : @browser_with_version[name] = count
+
+				# Increase the count of the specific browser
 				if browser_name.include? "Chrome"
 					# @chrome_versions
-					@chrome_versions[name] ? @chrome_versions[name] = @chrome_versions[name] + 1 : @chrome_versions[name] = 1
+					@chrome_versions[name] ? @chrome_versions[name] += count : @chrome_versions[name] = count
 				elsif browser_name.include? "Firefox"
 					# @firefox_versions
-					@firefox_versions[name] ? @firefox_versions[name] = @firefox_versions[name] + 1 : @firefox_versions[name] = 1
+					@firefox_versions[name] ? @firefox_versions[name] += count : @firefox_versions[name] = count
 				elsif browser_name.include? "Edge"
 					# @edge_versions
-					@edge_versions[name] ? @edge_versions[name] = @edge_versions[name] + 1 : @edge_versions[name] = 1
+					@edge_versions[name] ? @edge_versions[name] = @edge_versions[name] += count : @edge_versions[name] = count
 				end
+
+				i += 1
 			end
 
 			# Get the os
-			os_name = get_value_from_property_count_array(log.properties, "os_name")
-			os_version = get_value_from_property_count_array(log.properties, "os_version")
+			os_names = get_property_counts_by_name(log.properties, "os_name")
+			os_versions = get_property_counts_by_name(log.properties, "os_version")
 
-			if os_name && os_version
-				# @os_with_version
+			i = 0
+			os_names.each do |os_name_hash|
+				os_name = os_name_hash["value"]
+				os_version = os_versions[i]["value"]
 				name = "#{os_name} #{os_version}"
-				@os_with_version[name] ? @os_with_version[name] = @os_with_version[name] + 1 : @os_with_version[name] = 1
+				count = os_names[i]["count"]
 
-				# @os_without_version
-				name = os_name
-				@os_without_version[name] ? @os_without_version[name] = @os_without_version[name] + 1 : @os_without_version[name] = 1
+				# Increase the count of the os in @os_with_version
+				@os_with_version[name] ? @os_with_version[name] += count : @os_with_version[name] = count
 
-				name = "#{os_name} #{os_version}"
-				if os_name.include?("Windows")
+				# Increase the count of the os in @os_without_version
+				@os_without_version[os_name] ? @os_without_version[os_name] += count : @os_without_version[os_name] = count
+
+				# Increase the count of the specific os
+				if os_name.include? "Windows"
 					# @windows_versions
-					@windows_versions[name] ? @windows_versions[name] = @windows_versions[name] + 1 : @windows_versions[name] = 1
-				elsif os_name.include?("Android")
+					@windows_versions[name] ? @windows_versions[name] += count : @windows_versions[name] = count
+				elsif os_name.include? "Android"
 					# @android_versions
-					@android_versions[name] ? @android_versions[name] = @android_versions[name] + 1 : @android_versions[name] = 1
+					@android_versions[name] ? @android_versions[name] += count : @android_versions[name] = count
 				end
+
+				i += 1
 			end
 		end
 	end
@@ -399,13 +411,13 @@ class DevsController < ApplicationController
 		return [sorted_time, users_period]
 	end
 
-	def get_value_from_property_count_array(property_count_array, property_name)
+	def get_property_counts_by_name(property_count_array, property_name)
 		value_array = property_count_array.select { |p| p["name"] == property_name }
 		
 		if value_array && value_array.count > 0
-			return value_array.first["value"]
+			return value_array
 		else
-			return nil
+			return Array.new
 		end
 	end
 end
