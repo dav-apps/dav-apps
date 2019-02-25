@@ -403,7 +403,7 @@ class DevsController < ApplicationController
 		value_array = property_count_array.select { |p| p["name"] == property_name }
 		
 		if value_array && value_array.count > 0
-			return value_array.first
+			return value_array.first["value"]
 		else
 			return nil
 		end
