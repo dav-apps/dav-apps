@@ -23,7 +23,7 @@ gem 'turbolinks', '~> 5'
 gem 'bootsnap', require: false
 
 # Bootstrap and Jquery
-gem 'bootstrap', '~> 4.1.0'
+gem 'bootstrap', '~> 4.3.1'
 gem 'jquery-rails'
 gem 'sprockets'
 
