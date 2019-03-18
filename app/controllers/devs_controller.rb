@@ -236,29 +236,28 @@ class DevsController < ApplicationController
 			end
 
 			# Get the os
-			os_names = get_property_counts_by_name(log.properties, "os_name")
-			os_versions = get_property_counts_by_name(log.properties, "os_version")
-
 			i = 0
-			os_names.each do |os_name_hash|
-				os_name = os_name_hash["value"]
-				os_version = os_versions[i]["value"]
-				name = "#{os_name} #{os_version}"
-				count = os_names[i]["count"]
+			log.properties.each do |property|
+				if property["name"] == "os_name"
+					# Increase the count of the os in @os_without_version
+					count = property["count"]
+					name = property["value"]
+					@os_without_version[name] ? @os_without_version[name] += count : @os_without_version[name] = count
 
-				# Increase the count of the os in @os_with_version
-				@os_with_version[name] ? @os_with_version[name] += count : @os_with_version[name] = count
+					if log.properties[i + 1] && log.properties[i + 1]["name"] == "os_version"
+						# Increase the count of the os in @os_with_version
+						name = "#{property["value"]} #{log.properties[i + 1]["value"]}"
+						@os_with_version[name] ? @os_with_version[name] += count : @os_with_version[name] = count
 
-				# Increase the count of the os in @os_without_version
-				@os_without_version[os_name] ? @os_without_version[os_name] += count : @os_without_version[os_name] = count
-
-				# Increase the count of the specific os
-				if os_name.include? "Windows"
-					# @windows_versions
-					@windows_versions[name] ? @windows_versions[name] += count : @windows_versions[name] = count
-				elsif os_name.include? "Android"
-					# @android_versions
-					@android_versions[name] ? @android_versions[name] += count : @android_versions[name] = count
+						# Increase the count of the specific os
+						if name.include? "Windows"
+							# @windows_versions
+							@windows_versions[name] ? @windows_versions[name] += count : @windows_versions[name] = count
+						elsif name.include? "Android"
+							# @android_versions
+							@android_versions[name] ? @android_versions[name] += count : @android_versions[name] = count
+						end
+					end
 				end
 
 				i += 1
