@@ -200,7 +200,7 @@ class DevsController < ApplicationController
 			# Get the country
 			country = get_property_counts_by_name(log.properties, "country").first
 			if country
-				@countries[country] ? @countries[country] = @countries[country] + 1 : @countries[country] = 1
+				@countries[country["value"]] ? @countries[country["value"]] += country["count"] : @countries[country["value"]] = country["count"]
 			end
 
 			# Get the browser
