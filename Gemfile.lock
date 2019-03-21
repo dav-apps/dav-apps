@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/Dav2070/dav-gem.git
-  revision: 8aa4f3f98e29fa13a3ff677bd9fff831ab0c31c3
+  revision: e9caa0f13486051df23463f17ec2db92ccf36d99
   specs:
-    dav (0.8)
+    dav (0.9)
 
 GEM
   remote: https://rubygems.org/
@@ -130,7 +130,7 @@ GEM
     pg (0.21.0)
     popper_js (1.14.5)
     public_suffix (3.0.3)
-    puma (3.12.0)
+    puma (3.12.1)
     rack (2.0.6)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -257,4 +257,4 @@ RUBY VERSION
    ruby 2.5.1p57
 
 BUNDLED WITH
-   1.16.3
+   2.0.1

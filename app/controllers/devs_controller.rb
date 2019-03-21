@@ -31,15 +31,6 @@ class DevsController < ApplicationController
 			@users = Dav::Analytics.get_users(session[:jwt])["users"]
 			@plan_count = Hash.new
 
-			@active_users_count = Hash.new
-			@daily_active_users = Dav::Analytics.get_active_users(session[:jwt], 0)["users"]
-			@monthly_active_users = Dav::Analytics.get_active_users(session[:jwt], 1)["users"]
-			@yearly_active_users = Dav::Analytics.get_active_users(session[:jwt], 2)["users"]
-
-			@active_users_count["Daily"] = @daily_active_users.count
-			@active_users_count["Monthly"] = @monthly_active_users.count
-			@active_users_count["Yearly"] = @yearly_active_users.count
-
 			@confirmed_users_count = Hash.new
 			@confirmed_users_count["Confirmed"] = 0
 			@confirmed_users_count["Unconfirmed"] = 0
@@ -55,7 +46,7 @@ class DevsController < ApplicationController
 			# Sort for the users chart
 			default_period = 10 * 365 * 24 * 60 * 60		# 10 years
 			sort_by = params["sort_by"]
-			period = params["period"] ? params["period"] : default_period
+			period = params["period"] ? params["period"].to_i : default_period
 
 			sorted_arrays = count_time_cumulatively(period, sort_by, @users, "created_at")
 			@sorted_array = sorted_arrays[0]
@@ -73,6 +64,21 @@ class DevsController < ApplicationController
 			end
 
 			@new_users_count = sorted_arrays[1].count
+
+			# @active_users_count data type: Array<Hash<name: string, data: Hash<string, int>>>
+			active_users = Dav::Analytics.get_active_users(session[:jwt], Time.now.to_i - period)
+			@active_users_count = [
+				{ "name" => "Daily", "data" => Hash.new },
+				{ "name" => "Monthly", "data" => Hash.new },
+				{ "name" => "Yearly", "data" => Hash.new }
+			]
+
+			active_users.each do |active_user|
+				# Get the daily active users
+				@active_users_count[0]["data"][active_user.time] = active_user.count_daily
+				@active_users_count[1]["data"][active_user.time] = active_user.count_monthly
+				@active_users_count[2]["data"][active_user.time] = active_user.count_yearly
+			end
 		rescue StandardError => e
 			puts e.message
 			flash[:danger] = "There was an error: " + e.message
@@ -283,13 +289,28 @@ class DevsController < ApplicationController
 			# Sort for the users chart
 			default_period = 10 * 365 * 24 * 60 * 60		# 10 years
 			sort_by = params["sort_by"]
-			period = params["period"] ? params["period"] : default_period
+			period = params["period"] ? params["period"].to_i : default_period
 
 			sorted_arrays = count_time_cumulatively(period, sort_by, @analytics["users"], "started_using")
 
 			@sorted_time = sorted_arrays[0]
 			@new_users_count = sorted_arrays[1].count
 			@total_users_count = @analytics["users"].count
+
+			# @active_users_count data type: Array<Hash<name: string, data: Hash<string, int>>>
+			active_users = @app.get_active_users(session[:jwt], Time.now.to_i - period)
+			@active_users_count = [
+				{ "name" => "Daily", "data" => Hash.new },
+				{ "name" => "Monthly", "data" => Hash.new },
+				{ "name" => "Yearly", "data" => Hash.new }
+			]
+
+			active_users.each do |active_user|
+				# Get the daily active users
+				@active_users_count[0]["data"][active_user.time] = active_user.count_daily
+				@active_users_count[1]["data"][active_user.time] = active_user.count_monthly
+				@active_users_count[2]["data"][active_user.time] = active_user.count_yearly
+			end
 		rescue => e
 			puts e.message
 			flash[:danger] = "There was an error: " + e.message
