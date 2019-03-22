@@ -54,12 +54,16 @@ class DevsController < ApplicationController
 			# Set the plan count
 			@plan_count["Free"] = 0
 			@plan_count["Plus"] = 0
+			@plan_count["Pro"] = 0
+			
 			@users.each do |user|
-				plan = user["plan"]
-				if plan == 0
-					@plan_count["Free"] += 1
-				elsif plan == 1
+				case user["plan"]
+				when 1
 					@plan_count["Plus"] += 1
+				when 2
+					@plan_count["Pro"] += 1
+				else
+					@plan_count["Free"] += 1
 				end
 			end
 
