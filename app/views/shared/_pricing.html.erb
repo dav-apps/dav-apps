@@ -1,16 +1,13 @@
 <div class="row mt-4">
-   <div class="col-sm-5 offset-1 mt-3">
-      <div class="card text-center">
-         <div class="card-header">
-            Free
-         </div>
+   <div class="col-md-4 mt-3 mb-4">
+      <div class="card text-center shadow">
          <div class="card-body">
-            <h4 class="card-title">Free</h4>
+            <h4 class="card-title" style="margin-bottom: 40px;">Free</h4>
             <p class="card-text">
                <ul class="list-group">
-                  <li class="list-group-item border-left-0 border-right-0">Use all apps</li>
-                  <li class="list-group-item border-left-0 border-right-0">5 GB of Storage</li>
-                  <li class="list-group-item border-left-0 border-right-0">Synchronize your data across an unlimited amount of devices</li>
+						<li class="list-group-item border-left-0 border-right-0">2 GB of storage</li>
+                  <li class="list-group-item border-left-0 border-right-0">Use all our apps</li>
+                  <li class="list-group-item border-left-0 border-right-0">Access your data on any device</li>
                   <li class="list-group-item border-left-0 border-right-0">No ads</li>
                </ul>
             </p>
@@ -19,18 +16,38 @@
       </div>
    </div>
 
-   <div class="col-sm-5 offset-1 mt-3">
-      <div class="card text-center">
-         <div class="card-header">
-            3 € per month
-         </div>
+   <div class="col-md-4 mt-3 mb-4">
+      <div class="card text-center shadow">
          <div class="card-body">
             <h4 class="card-title">Plus</h4>
+				<h6 class="card-subtitle text-muted">3 € per month</h6>
             <p class="card-text">
                <ul class="list-group">
-                  <li class="list-group-item border-left-0 border-right-0">All free features</li>
-                  <li class="list-group-item border-left-0 border-right-0">50 GB of Storage</li>
-                  <li class="list-group-item border-left-0 border-right-0">Use all Plus features in all apps</li>
+						<li class="list-group-item border-left-0 border-right-0">15 GB of storage</li>
+                  <li class="list-group-item border-left-0 border-right-0">Use all our apps</li>
+                  <li class="list-group-item border-left-0 border-right-0">Access your data on any device</li>
+						<li class="list-group-item border-left-0 border-right-0">No ads</li>
+						<li class="list-group-item border-left-0 border-right-0">Use all Plus features in our apps</li>
+               </ul>
+            </p>
+            <%= link_to "Sign up", signup_path, class: "btn btn-primary" if controller.controller_name == "starts" %>
+         </div>
+      </div>
+   </div>
+
+	<div class="col-md-4 mt-3">
+      <div class="card text-center shadow">
+         <div class="card-body">
+            <h4 class="card-title">Pro</h4>
+				<h6 class="card-subtitle text-muted">10 € per month</h6>
+            <p class="card-text">
+               <ul class="list-group">
+						<li class="list-group-item border-left-0 border-right-0">50 GB storage</li>
+                  <li class="list-group-item border-left-0 border-right-0">Use all our apps</li>
+                  <li class="list-group-item border-left-0 border-right-0">Access your data on any device</li>
+						<li class="list-group-item border-left-0 border-right-0">No ads</li>
+						<li class="list-group-item border-left-0 border-right-0">Use all Plus features in our apps</li>
+						<li class="list-group-item border-left-0 border-right-0">Use all Pro features in our apps</li>
                </ul>
             </p>
             <%= link_to "Sign up", signup_path, class: "btn btn-primary" if controller.controller_name == "starts" %>
