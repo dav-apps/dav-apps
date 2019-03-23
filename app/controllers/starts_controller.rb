@@ -23,6 +23,8 @@ class StartsController < ApplicationController
 	end
 
 	def pricing
-
+		if session[:jwt] && session[:user_id]
+			@user = Dav::User.get(session[:jwt], session[:user_id])
+		end
 	end
 end
