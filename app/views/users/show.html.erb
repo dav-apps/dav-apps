@@ -118,6 +118,10 @@
 					<small style="margin-top: -15px">
 						Need more? Upgrade to <a href="#plans">Plus</a>
 					</small>
+               <% elsif @user.plan == 1 && total_used_storage_percent > 80 %>
+               <small style="margin-top: -15px">
+                  Need more? Upgrade to <a href="#plans">Pro</a>
+               </small>
 					<% elsif !@user.confirmed %>
                <small style="margin-top: -15px">
                   Need more? <a href="#plans">Confirm your email address</a>
