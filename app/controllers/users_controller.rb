@@ -149,9 +149,11 @@ class UsersController < ApplicationController
 		archive_id = params[:archive_id]
 		update_payment_info = params[:update_payment_info]
 		upgrade_plus = params[:upgrade_plus]
-      downgrade_free = params[:downgrade_free]
-      resend_confirmation_email = params[:resend_confirmation_email]
-
+		upgrade_pro = params[:upgrade_pro]
+		downgrade_free = params[:downgrade_free]
+		downgrade_plus = params[:downgrade_plus]
+		resend_confirmation_email = params[:resend_confirmation_email]
+		
       if username
          if username == @user.username
             redirect_to user_path
@@ -263,7 +265,6 @@ class UsersController < ApplicationController
          begin
             archive = Dav::Archive.get(@user.jwt, archive_id)
             archive.delete(@user.jwt)
-   
             flash[:success] = "The archive was successfully deleted."
          rescue StandardError => e
             flash[:danger] = replace_error_message(e.message)
@@ -274,7 +275,6 @@ class UsersController < ApplicationController
 		if update_payment_info == "true"
 			begin
 				@user.update({payment_token: params["stripeToken"]})
-
 				flash[:success] = "Your payment info was successfully updated"
 			rescue StandardError => e
 				flash[:danger] = replace_error_message(e.message)
@@ -286,8 +286,18 @@ class UsersController < ApplicationController
 			begin
             # Send a request to the api to update the plan
             @user.update({payment_token: params["stripeToken"], plan: 1})
+				flash[:success] = "Thank you for upgrading to Plus :)"
+			rescue StandardError => e
+				flash[:danger] = replace_error_message(e.message)
+			end
+			redirect_to user_path(anchor: "plans")
+		end
 
-				flash[:success] = "Your successfully upgraded to Plus"
+		if upgrade_pro == "true"
+			begin
+				# Send a request to the api to update the plan
+				@user.update({payment_token: params["stripeToken"], plan: 2})
+				flash[:success] = "Thank you for upgrading to Pro :)"
 			rescue StandardError => e
 				flash[:danger] = replace_error_message(e.message)
 			end
@@ -297,20 +307,29 @@ class UsersController < ApplicationController
 		if downgrade_free
 			begin
 				@user.update({plan: 0})
-
-				flash[:success] = "Your plan was successfully changed"
+				flash[:success] = "Your plan will not be renewed after the subscription end"
 			rescue StandardError => e
 				flash[:danger] = replace_error_message(e.message)
 			end
 			redirect_to user_path(anchor: "plans")
-      end
+		end
+		
+		if downgrade_plus
+			begin
+				@user.update({plan: 1})
+				flash[:success] = "Your plan was successfully updated"
+			rescue StandardError => e
+				flash[:danger] = replace_error_message(e.message)
+			end
+			redirect_to user_path(anchor: "plans")
+		end
       
       if resend_confirmation_email
          begin
             Dav::User.send_verification_email(@user.email)
             flash[:success] = "You will receive a new confirmation email"
          rescue StandardError => e
-            flash.now[:danger] = replace_error_message(e.message)
+            flash[:danger] = replace_error_message(e.message)
          end
 
          redirect_to user_path(anchor: "plans")
@@ -318,8 +337,8 @@ class UsersController < ApplicationController
       
 		if !username && !email && !password && !password_confirmation && 
 			!app_id && !delete_account && !avatar && !create_archive && 
-         !archive_id && !update_payment_info && !upgrade_plus && !downgrade_free &&
-         !resend_confirmation_email
+			!archive_id && !update_payment_info && !upgrade_plus && !upgrade_pro &&
+			!downgrade_free && !downgrade_plus && !resend_confirmation_email
 
          redirect_to user_path
       end
