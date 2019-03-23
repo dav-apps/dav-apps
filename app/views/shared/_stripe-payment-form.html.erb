@@ -1,10 +1,24 @@
-<%= form_tag({upgrade_plus: upgrade_plus, update_payment_info: !upgrade_plus}) do %>
+<%= form_tag({upgrade_plus: plan == 1 && upgrade, upgrade_pro: plan == 2 && upgrade, update_payment_info: !upgrade}) do %>
    <script
       src="https://checkout.stripe.com/checkout.js" class="stripe-button"
       data-key="<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>"
-      data-amount="300"
+      data-amount="
+         <% if !upgrade %>
+            0
+         <% elsif plan == 1 %>
+            300
+         <% elsif plan == 2 %>
+            1000
+         <% end %>"
       data-name="dav"
-      data-description="<%= upgrade_plus ? "Upgrade to dav Plus" : "Update your payment information" %>"
+      data-description="
+         <% if plan == 1 && upgrade %>
+            Upgrade to dav Plus
+         <% elsif plan == 2 && upgrade %>
+            Upgrade to dav Pro
+         <% else %>
+            Update your payment information
+         <% end %>"
       data-image="https://abload.de/img/final3invers200x150pns3w.png"
       data-locale="auto"
       data-currency="eur"
