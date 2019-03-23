@@ -1,4 +1,4 @@
-<div class="row mt-4">
+<div class="row">
    <div class="col-md-4 mt-3 mb-4">
       <div class="card text-center shadow">
          <div class="card-body">
@@ -11,7 +11,17 @@
                   <li class="list-group-item border-left-0 border-right-0">No ads</li>
                </ul>
             </p>
-            <%= link_to "Sign up", signup_path, class: "btn btn-primary" if controller.controller_name == "starts" %>
+				<% if @user && session[:jwt] %>
+					<% if @user.plan == 0 %>
+						<%= link_to "Current plan", "", class: "btn btn-outline-primary disabled" %>
+					<% elsif @user.subscription_status == 1 %>
+						<%= link_to "Downgrade", "#downgrade-to-free-modal", :class => "btn btn-outline-danger disabled", "data-toggle" => "modal" %>
+					<% else %>
+						<%= link_to "Downgrade", "#downgrade-to-free-modal", :class => "btn btn-outline-danger", "data-toggle" => "modal" %>
+					<% end %>
+				<% else %>
+					<%= link_to "Sign up", signup_path, class: "btn btn-primary" %>
+				<% end %>
          </div>
       </div>
    </div>
@@ -30,7 +40,27 @@
 						<li class="list-group-item border-left-0 border-right-0">Use all Plus features in our apps</li>
                </ul>
             </p>
-            <%= link_to "Sign up", signup_path, class: "btn btn-primary" if controller.controller_name == "starts" %>
+            <% if @user && session[:jwt] %>
+					<% if !@user.confirmed %>
+						<button type="button" class="btn btn-primary disabled">Upgrade</button>
+					<% elsif @user.plan == 0 %>
+						<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse-upgrade-options-plus" aria-expanded="false" aria-controls="collapse-upgrade-options-plus">
+							Upgrade
+						</button>
+
+						<div class="collapse mt-3" id="collapse-upgrade-options-plus">
+							<%= render 'shared/stripe-payment-form', user: @user, upgrade: true, plan: 1 %>
+						</div>
+					<% elsif @user.plan == 1 %>
+						<%= link_to "Current plan", "", class: "btn btn-outline-primary disabled" %>
+					<% elsif @user.plan == 2 && @user.subscription_status == 1 %>
+						<%= link_to "Downgrade", "#downgrade-to-plus-modal", :class => "btn btn-outline-danger disabled", "data-toggle" => "modal" %>
+					<% elsif @user.plan == 2 %>
+						<%= link_to "Downgrade", "#downgrade-to-plus-modal", :class => "btn btn-outline-danger", "data-toggle" => "modal" %>
+					<% end %>
+				<% else %>
+            	<%= link_to "Sign up", signup_path, class: "btn btn-primary" %>
+				<% end %>
          </div>
       </div>
    </div>
@@ -42,7 +72,7 @@
 				<h6 class="card-subtitle text-muted">10 € per month</h6>
             <p class="card-text">
                <ul class="list-group">
-						<li class="list-group-item border-left-0 border-right-0">50 GB storage</li>
+						<li class="list-group-item border-left-0 border-right-0">50 GB of storage</li>
                   <li class="list-group-item border-left-0 border-right-0">Use all our apps</li>
                   <li class="list-group-item border-left-0 border-right-0">Access your data on any device</li>
 						<li class="list-group-item border-left-0 border-right-0">No ads</li>
@@ -50,8 +80,67 @@
 						<li class="list-group-item border-left-0 border-right-0">Use all Pro features in our apps</li>
                </ul>
             </p>
-            <%= link_to "Sign up", signup_path, class: "btn btn-primary" if controller.controller_name == "starts" %>
+            <% if @user && session[:jwt] %>
+					<% if !@user.confirmed %>
+						<button type="button" class="btn btn-primary disabled">Upgrade</button>
+					<% elsif @user.plan < 2 %>
+						<button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#collapse-upgrade-options-pro" aria-expanded="false" aria-controls="collapse-upgrade-options-pro">
+							Upgrade
+						</button>
+
+						<div class="collapse mt-3" id="collapse-upgrade-options-pro">
+							<%= render 'shared/stripe-payment-form', user: @user, upgrade: true, plan: 2 %>
+						</div>
+					<% else %>
+						<%= link_to "Current plan", signup_path, class: "btn btn-outline-primary disabled" %>
+					<% end %>
+				<% else %>
+            	<%= link_to "Sign up", signup_path, class: "btn btn-primary" %>
+				<% end %>
          </div>
       </div>
    </div>
 </div>
+
+<% if @user && session[:jwt] %>
+<div class="modal fade" id="downgrade-to-free-modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+				<h5 class="modal-title">Downgrade to Free</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+			</div>
+			<div class="modal-body">
+            <p>Are you sure you want to downgrade to the Free plan?</p>
+				<p>Your subscription will run until <%= @user.period_end.strftime("%d %B %Y") if @user.period_end %>, but it will not be renewed after that.</p>
+         </div>
+			<div class="modal-footer">
+         	<%= button_to 'Downgrade', {:controller => "users", :action => "update", :downgrade_free => true}, :method=>:post, class: "btn btn-danger" %>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+         </div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="downgrade-to-plus-modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+				<h5 class="modal-title">Downgrade to Plus</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+			</div>
+			<div class="modal-body">
+            <p>Are you sure you want to downgrade to the Plus plan?</p>
+         </div>
+			<div class="modal-footer">
+         	<%= button_to 'Downgrade', {:controller => "users", :action => "update", :downgrade_plus => true}, :method=>:post, class: "btn btn-danger" %>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+         </div>
+		</div>
+	</div>
+</div>
+<% end %>
