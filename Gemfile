@@ -37,7 +37,7 @@ gem 'dav', github: 'Dav2070/dav-gem'
 gem 'activerecord-session_store'
 
 # Displaying charts
-gem "chartkick"
+gem "chartkick", ">= 3.2.0"
 
 # Browser detection
 gem 'browser'
