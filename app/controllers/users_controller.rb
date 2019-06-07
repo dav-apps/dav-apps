@@ -21,7 +21,8 @@ class UsersController < ApplicationController
 
 			redirect = ""
 			if session[:redirect]
-				redirect = session[:redirect]
+            redirect = session[:redirect]
+            session[:redirect] = nil
 			end
 
 			redirect_to root_path + redirect

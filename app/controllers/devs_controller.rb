@@ -85,9 +85,9 @@ class DevsController < ApplicationController
 			end
 
 			@current_active_users_count = Hash.new
-			@current_active_users_count["Daily"] = active_users.last.count_daily
-			@current_active_users_count["Monthly"] = active_users.last.count_monthly
-			@current_active_users_count["Yearly"] = active_users.last.count_yearly
+			@current_active_users_count["Daily"] = active_users.size > 0 ? active_users.last.count_daily : 0
+			@current_active_users_count["Monthly"] = active_users.size > 0 ? active_users.last.count_monthly : 0
+			@current_active_users_count["Yearly"] = active_users.size > 0 ? active_users.last.count_yearly : 0
 		rescue StandardError => e
 			puts e.message
 			flash[:danger] = "There was an error: " + e.message
@@ -322,9 +322,9 @@ class DevsController < ApplicationController
 			end
 
 			@current_active_users_count = Hash.new
-			@current_active_users_count["Daily"] = active_users.last.count_daily
-			@current_active_users_count["Monthly"] = active_users.last.count_monthly
-			@current_active_users_count["Yearly"] = active_users.last.count_yearly
+			@current_active_users_count["Daily"] = active_users.size > 0 ? active_users.last.count_daily : 0
+			@current_active_users_count["Monthly"] = active_users.size > 0 ? active_users.last.count_monthly : 0
+			@current_active_users_count["Yearly"] = active_users.size > 0 ? active_users.last.count_yearly : 0
 		rescue => e
 			puts e.message
 			flash[:danger] = "There was an error: " + e.message
