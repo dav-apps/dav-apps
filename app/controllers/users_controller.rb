@@ -3,10 +3,12 @@ class UsersController < ApplicationController
    before_action :require_user, only: [:show]
 
    def login
-      
+		if params[:redirect]
+			session[:redirect] = params[:redirect]
+		end
    end
 
-   def login_action
+	def login_action
       email = params[:email]
       password = params[:password]
 		auth = get_auth_object
@@ -15,8 +17,14 @@ class UsersController < ApplicationController
          user = auth.login(email, password)
          set_session(user)
          
-         log("login")
-         redirect_to root_path
+			log("login")
+
+			redirect = ""
+			if session[:redirect]
+				redirect = session[:redirect]
+			end
+
+			redirect_to root_path + redirect
       rescue StandardError => e
          flash.now[:danger] = replace_error_message(e.message)
          render 'login'
