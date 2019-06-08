@@ -5,7 +5,13 @@ class UsersController < ApplicationController
    def login
 		if params[:redirect]
 			session[:redirect] = params[:redirect]
-		end
+      end
+      
+      if logged_in?
+         # Redirect to root or the redirect path
+         redirect = params[:redirect] ? params[:redirect] : ""
+         redirect_to root_path + redirect
+      end
    end
 
 	def login_action
@@ -103,6 +109,10 @@ class UsersController < ApplicationController
    end
 
    def signup
+      if logged_in?
+         redirect_to root_path
+      end
+
 		session[:redirect_url] = params[:redirect_url]
    end
 
