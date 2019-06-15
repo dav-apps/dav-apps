@@ -40,7 +40,7 @@ class UsersController < ApplicationController
 
    def login_implicit
       api_key = params[:api_key]
-      redirect_url = params[:redirect_url]
+		redirect_url = params[:redirect_url]
       auth = get_auth_object
 
       if !api_key || !redirect_url
@@ -52,16 +52,16 @@ class UsersController < ApplicationController
          end
 
          session[:api_key] = api_key
-         session[:redirect_url] = redirect_url
+			session[:redirect_url] = redirect_url
       end
    end
 
    def login_implicit_action
       api_key = session[:api_key]
-      redirect_url = session[:redirect_url]
+		redirect_url = session[:redirect_url]
 
       email = params[:email]
-      password = params[:password]
+		password = params[:password]
       
       if params[:current_user]
          # Logged in user was clicked, redirect to app
@@ -69,17 +69,20 @@ class UsersController < ApplicationController
          begin
             user = Dav::Auth.login_by_jwt(session[:jwt], api_key)
 
+				session[:api_key] = nil
+				session[:redirect_url] = nil
             log("login_implicit")
-				redirect_to redirect_path(operation: "login", redirect_url: "#{redirect_url}?jwt=#{user.jwt}")
+            
+            redirect_to redirect_path(operation: "login", redirect_url: "#{redirect_url}?jwt=#{user.jwt}")
          rescue StandardError => e
-            session[:api_key] = api_key
-            session[:redirect_url] = redirect_url
+				flash[:danger] = replace_error_message(e.message)
+				redirect_to login_implicit_path + "?api_key=#{api_key}&redirect_url=#{CGI.escape(redirect_url)}"
          end
       else
          # Another user has logged in
          begin
             auth = get_auth_object
-            
+
             user = auth.login(email, password)
             set_session(user)
    
@@ -93,14 +96,54 @@ class UsersController < ApplicationController
             session[:api_key] = nil
 				session[:redirect_url] = nil
 				log("login_implicit")
-            
+				
 				redirect_to redirect_path(operation: "login", redirect_url: "#{redirect_url}?jwt=#{user2.jwt}")
          rescue StandardError => e
             flash[:danger] = replace_error_message(e.message)
-            redirect_to login_implicit_path + "?api_key=#{api_key}&redirect_url=#{CGI.escape(redirect_url)}"
+				redirect_to login_implicit_path + "?api_key=#{api_key}&redirect_url=#{CGI.escape(redirect_url)}"
          end
       end
-   end
+	end
+	
+	def login_session
+		api_key = params[:api_key]
+		app_id = params[:app_id]
+		redirect_url = params[:redirect_url]
+
+		if !api_key || !app_id || !redirect_url
+			flash[:danger] = "There was an error. Please try again."
+         redirect_to root_path
+		else
+			# Save the params in the session
+			session[:api_key] = api_key
+			session[:app_id] = app_id
+			session[:redirect_url] = redirect_url
+		end
+	end
+
+	def login_session_action
+		email = params[:email]
+		password = params[:password]
+		api_key = session[:api_key]
+		app_id = session[:app_id]
+		redirect_url = session[:redirect_url]
+      auth = get_auth_object
+		
+		begin
+			result = Dav::Session.create(auth.get_token, email, password, api_key, app_id)
+
+			# Clear the session variables
+			session[:api_key] = nil
+			session[:redirect_url] = nil
+			session[:app_id] = nil
+			log("login_session")
+
+			redirect_to redirect_path(operation: "login", redirect_url: "#{redirect_url}?jwt=#{result.jwt}")
+		rescue StandardError => e
+			flash[:danger] = replace_error_message(e.message)
+			redirect_to login_session_path(api_key: api_key, app_id: app_id, redirect_url: redirect_url)
+		end
+	end
 
    def logout
       clear_session
