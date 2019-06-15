@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Dav2070/dav-gem.git
-  revision: ae7fb52a46ead33e61898dd7bcf18485dc7e8199
+  revision: 260dd74d5a96c85a09e7b6b36b9f51b49c3f39f8
   branch: dev
   specs:
     dav (0.6)
@@ -89,6 +89,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.5)
     crass (1.0.4)
+    device_detector (1.0.1)
     dotenv (2.7.2)
     dotenv-rails (2.7.2)
       dotenv (= 2.7.2)
@@ -234,6 +235,7 @@ DEPENDENCIES
   chartkick (>= 3.2.0)
   coffee-rails (~> 4.2)
   dav!
+  device_detector
   dotenv-rails
   font-awesome-rails
   geocoder

@@ -50,12 +50,14 @@ class ApplicationController < ActionController::Base
 	end
 
 	def log(event_name)
-		if !browser.bot?
+      if !browser.bot?
+         client = DeviceDetector.new(request.user_agent)
+
 			properties = Hash.new
 			properties["browser_name"] = browser.name
 			properties["browser_version"] = browser.version
-			properties["os_name"] = browser.platform.name
-			properties["os_version"] = browser.platform.version
+         properties["os_name"] = client.os_name
+         properties["os_version"] = client.os_full_version
 
 			begin
 				properties["country"] = request.location.country

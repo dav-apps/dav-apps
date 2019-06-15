@@ -41,6 +41,7 @@ gem "chartkick", ">= 3.2.0"
 
 # Browser detection
 gem 'browser'
+gem 'device_detector'
 
 # IP location
 gem 'geocoder'

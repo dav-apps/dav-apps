@@ -108,7 +108,7 @@ class UsersController < ApplicationController
 	def login_session
 		api_key = params[:api_key]
 		app_id = params[:app_id]
-		redirect_url = params[:redirect_url]
+      redirect_url = params[:redirect_url]
 
 		if !api_key || !app_id || !redirect_url
 			flash[:danger] = "There was an error. Please try again."
@@ -118,6 +118,11 @@ class UsersController < ApplicationController
 			session[:api_key] = api_key
 			session[:app_id] = app_id
 			session[:redirect_url] = redirect_url
+			# Device info
+			client = DeviceDetector.new(request.user_agent)
+			session[:device_name] = client.device_name || "Unknown"
+			session[:device_type] = client.device_type.capitalize
+			session[:device_os] = "#{client.os_name} #{client.os_full_version}"
 		end
 	end
 
@@ -127,15 +132,21 @@ class UsersController < ApplicationController
 		api_key = session[:api_key]
 		app_id = session[:app_id]
 		redirect_url = session[:redirect_url]
+		device_name = session[:device_name]
+		device_type = session[:device_type]
+		device_os = session[:device_os]
       auth = get_auth_object
 		
 		begin
-			result = Dav::Session.create(auth.get_token, email, password, api_key, app_id)
+			result = Dav::Session.create(auth.get_token, email, password, api_key, app_id, device_name, device_type, device_os)
 
 			# Clear the session variables
 			session[:api_key] = nil
 			session[:redirect_url] = nil
 			session[:app_id] = nil
+			session[:device_name] = nil
+			session[:device_type] = nil
+			session[:device_os] = nil
 			log("login_session")
 
 			redirect_to redirect_path(operation: "login", redirect_url: "#{redirect_url}?jwt=#{result.jwt}")
