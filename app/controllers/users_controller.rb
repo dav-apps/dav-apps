@@ -163,11 +163,13 @@ class UsersController < ApplicationController
    end
 
    def signup
-      if logged_in?
+      if logged_in? && !params[:redirect_url]
          redirect_to root_path
       end
 
-		session[:redirect_url] = params[:redirect_url]
+      session[:redirect_url] = params[:redirect_url]
+      session[:app_id] = params[:app_id]
+      session[:api_key] = params[:api_key]
    end
 
    def signup_action
@@ -177,24 +179,40 @@ class UsersController < ApplicationController
       password_confirmation = params[:password_confirmation]
 		auth = get_auth_object
 		redirect_url = session[:redirect_url]
+		app_id = session[:app_id]
+		api_key = session[:api_key]
+      
+		# Clear the session variables
+		session[:redirect_url] = nil
+		session[:app_id] = nil
+		session[:api_key] = nil
 
       begin
-         if password == password_confirmation
-				user = auth.signup(email, password, username)
-				set_session(user)
-				log("signup")
-				new_redirect_url = "#{redirect_url}?jwt=#{user.jwt}"
+			if password == password_confirmation
+				
+				if app_id && api_key
+					client = DeviceDetector.new(request.user_agent)
+					device_name = client.device_name || "Unknown"
+					device_type = client.device_type.capitalize
+					device_os = "#{client.os_name} #{client.os_full_version}"
 
+					user = auth.signup_with_session(email, password, username, app_id, api_key, device_name, device_type, device_os)
+					log("signup_session")
+				else
+					user = auth.signup(email, password, username)
+					log("signup")
+				end
+
+				set_session(user)
+            new_redirect_url = "#{redirect_url}?jwt=#{user.jwt}"
 				redirect_to redirect_path(operation: "signup", redirect_url: redirect_url ? new_redirect_url : root_path)
          else
 				flash[:danger] = "The password confirmation does not match your password."
-				path = redirect_url ? signup_path(redirect_url: redirect_url) : signup_path
-				redirect_to path
+				redirect_to signup_path(redirect_url: redirect_url, app_id: app_id, api_key: api_key)
          end
       rescue StandardError => e
          flash[:danger] = replace_error_message(e.message)
-			path = redirect_url ? signup_path(redirect_url: redirect_url) : signup_path
-			redirect_to path
+			redirect_to signup_path(redirect_url: redirect_url, app_id: app_id, api_key: api_key)
       end
    end
 

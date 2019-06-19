@@ -125,7 +125,7 @@ class ApplicationController < ActionController::Base
 	end
 
 	def show_navbar_and_footer(controller_name, action_name, params)
-		!(controller_name == "users" && action_name == "login_implicit") && !(controller_name == "users" && action_name == "signup" && params[:redirect_url])
+		!(controller_name == "users" && action_name == "login_implicit") && !(controller_name == "users" && action_name == "signup" && params[:redirect_url]) && !(controller_name == "users" && action_name == "login_session")
 	end
 
 	class RailsDateRange < Range
