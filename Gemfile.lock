@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/Dav2070/dav-gem.git
-  revision: 5b67ab3a2235421fcbb4e6db153d27454913643e
+  revision: 59b89edce490e44f60eaa3bb7867d00c074a4be4
   specs:
-    dav (1.0)
+    dav (1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -179,7 +179,7 @@ GEM
     sassc (2.0.1)
       ffi (~> 1.9)
       rake
-    sassc-rails (2.1.1)
+    sassc-rails (2.1.2)
       railties (>= 4.0.0)
       sassc (>= 2.0)
       sprockets (> 3.0)
