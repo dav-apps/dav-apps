@@ -118,10 +118,11 @@ class UsersController < ApplicationController
 			session[:api_key] = api_key
 			session[:app_id] = app_id
 			session[:redirect_url] = redirect_url
+
 			# Device info
 			client = DeviceDetector.new(request.user_agent)
 			session[:device_name] = client.device_name || "Unknown"
-			session[:device_type] = client.device_type.capitalize
+			session[:device_type] = client.device_type.nil? ? "Unknown" : client.device_type.capitalize
 			session[:device_os] = "#{client.os_name} #{client.os_full_version}"
 		end
 	end
@@ -193,7 +194,7 @@ class UsersController < ApplicationController
 				if app_id && api_key
 					client = DeviceDetector.new(request.user_agent)
 					device_name = client.device_name || "Unknown"
-					device_type = client.device_type.capitalize
+					device_type = client.device_type.nil? ? "Unknown" : client.device_type.capitalize
 					device_os = "#{client.os_name} #{client.os_full_version}"
 
 					user = auth.signup_with_session(email, password, username, app_id, api_key, device_name, device_type, device_os)
