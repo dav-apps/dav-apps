@@ -48,3 +48,16 @@
 .privacy-text{
    font-size: 20px;
 }
+
+
+
+
+
+#start-header{
+	background-image: asset_url("start-background.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+   //background-position: left;
+	width: 100%;
+	min-height: 400px;
+}

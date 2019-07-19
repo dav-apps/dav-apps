@@ -23,65 +23,25 @@
 
 <% else %>
 
-<div class="container-fluid" id="start-section-1">
-	<div class="content">
-		<%= render 'layouts/messages' %>
-		
-		<div class="row">
-			<div class="col-12 col-sm-6 offset-sm-3">
-				<h2 id="start-text-1">Find the apps for your needs</h2>
-				<%= link_to "Sign up", signup_path, class: "btn btn-secondary mt-2" %>
-				<%= link_to "Find Apps", apps_path, class: "btn btn-primary mt-2" %>
-			</div>
+<div class="container-fluid" style="padding: 0px" onresize="resize()">
+	<div id="start-header" class="d-flex parallax">
+		<div class="acrylic align-self-center" style="margin-left: 50px; padding: 20px; width: 300px; color: white;">
+			<h4>dav is a new platform of connected services</h4>
 		</div>
 	</div>
-</div>
-<div class="container-fluid start-section" id="start-section-2">
-	<div class="row">
-		<div class="col-md-6 col-sm-12" align="center">
-			<%= image_tag("zeichnung.png", :height => "150px", :id => "image-zeichnung", style: "height: 100%; width: 100%; object-fit: contain; max-width: 250px") %>
-		</div>
-		<div class="col-md-6 col-sm-12 start-description" id="start-description-1" align="center">
-			<h2>Anything in one place</h2>
-			<p>Synchronize your data across all devices</p>
-		</div>
-	</div>
-</div>
-<div class="container-fluid start-section" id="start-section-3">
-	<div class="row">
-		<div class="col-md-6 col-sm-12 start-description" align="center">
-			<h2>Platform independent</h2>
-			<p>Our apps work on the most common platforms</p>
-		</div>
-		<div class="col-md-6 col-sm-12" align="center">
-			<%= fa_icon "android", style: "font-size: 70px; color: #535254", class: "m-2" %>
-			<%= fa_icon "windows", style: "font-size: 70px; color: #535254", class: "m-2" %>
-			<%= fa_icon "globe", style: "font-size: 70px; color: #535254", class: "m-2" %>
-		</div>
-	</div>
-</div>
-<div class="container-fluid start-section" id="start-section-4">
-	<div class="row">
-		<div class="col-md-6 col-sm-12" align="center">
-			<%= fa_icon "user-secret", style: "font-size: 90px; color: #535254", class: "m-2" %>
-		</div>
-		<div class="col-md-6 col-sm-12 start-description" align="center">
-			<h2>Privacy matters</h2>
-			<p>We will never track you and sell your personal data</p>
-		</div>
-	</div>
-</div>
-<div class="container-fluid start-section" id="start-section-5">
-	<div class="row">
-		<div class="col-10 offset-1 start-description" align="center">
-			<h3>Convinced?</h3>
-			<p>Try it out for free</p>
-			<%= link_to "Sign up", signup_path, class: "btn btn-secondary mt-2" %>
-			<%= link_to "Find Apps", apps_path, class: "btn btn-primary mt-2" %>
-		</div>
+	<div style="height: 50000px">
 	</div>
 </div>
 
-<%= javascript_include_tag "scripts/start.js" %>
+<script>
+	resize = function(){
+		document.getElementById("start-header").setAttribute("style", "height: " + window.outerHeight * 0.7 + "px;");
+	}
+
+	window.addEventListener('resize', resize);
+	resize();
+</script>
+
+<%= javascript_include_tag "scripts/fluent.js" %>
 
 <% end %>
