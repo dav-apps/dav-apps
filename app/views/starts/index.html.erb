@@ -25,22 +25,51 @@
 
 <div class="container-fluid" style="padding: 0px" onresize="resize()">
 	<div id="start-header" class="d-flex parallax">
+		<div style="position: absolute; left: 0; right: 0; margin-top: 80px"><%= render 'layouts/messages' %></div>
 		<div id="start-header-text" class="acrylic align-self-center">
-			<h4>dav is a new platform of connected services</h4>
+			<h5>dav is a new platform of connected apps and services</h5>
 		</div>
 	</div>
-	<div id="start-calendo">
-		<div id="start-calendo-header" class="row" style="width: 100%; margin: 0px">
-			<div class="col-12 col-md-6" style="height: 200px; width: 100%; background-color: efefef;">
-				<h2 class="mt-3 text-center">Calendo</h2>
-				<p>Calendo is a simple app for the organisation of your life. Have always the overview of your todos and appointments.</p>
-				<p>You can create todos, todo lists and appointments.</p>
+	<div id="start-calendo" class="row" style="width: 100%; margin: 0px">
+		<div class="col-12 col-md-6" style="width: 100%; background-color: #efefef;">
+			<h2 class="mt-3 text-center">Calendo</h2>
+
+			<p style="font-size: 20px" class="my-5">
+				Calendo is a simple app for managing your schedule. 
+				You can organize your appointments, manage your todos and group todos by topic.
+				<br>With Calendo you have always an overview of upcoming events and todos.
+				<br><br>You can log in with your dav Account to use the same calendar on all your devices.
+			</p>
+			
+			<a href='https://calendo.dav-apps.tech' target="blank" class="mr-2"><%= image_tag "globe-solid.png", style: "height: 45px" %></a>
+			<a href='https://play.google.com/store/apps/details?id=app.dav.calendo&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' target="blank"><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' class="google-play-badge" /></a>
+			<a href='//www.microsoft.com/store/apps/9NL3D2524GH9?cid=storebadge&ocid=badge' target="blank" class="mx-2"><img src='https://assets.windowsphone.com/85864462-9c82-451e-9355-a3d5f874397a/English_get-it-from-MS_InvariantCulture_Default.png' alt='English badge' class="microsoft-store-badge" /></a>
+			<a href='https://github.com/Dav2070/Calendo' target="blank" class="mx-2"><%= image_tag "GitHub-Mark-64px.png", class: "github-badge" %></a>
+		</div>
+		<div class="col-12 col-md-6 d-flex" style="width: 100%; background-color: #efefef">
+			<div class="mx-auto my-5">
+				<%= image_tag "CalendoScreenshot.png", id: "start-calendo-screenshot", style: "max-width: 400px; min-width: 250px", class: "shadow" %>
 			</div>
-			<div class="col-12 col-md-6 d-flex" style="width: 100%; background-color: #efefef">
-				<div class="mx-auto my-5 shadow">
-					<%= image_tag "CalendoScreenshot.png", id: "start-calendo-screenshot" %>
-				</div>
+		</div>
+	</div>
+	<div id="start-universalsoundboard" class="row" style="width: 100%; margin: 0px">
+		<div class="col-12 col-md-7 d-flex" style="width: 100%; background-color: #efefef;">
+			<div class="mx-auto my-5">
+				<%= image_tag "UniversalSoundboardScreenshot.png", id: "start-universalsoundboard-screenshot", style: "max-width: 700px; min-width: 250px", class: "shadow" %>
 			</div>
+		</div>
+		<div class="col-12 col-md-5" style="width: 100%; margin: 0px; background-color: #efefef">
+			<h2 class="mt-3 text-center">UniversalSoundboard</h2>
+
+			<p style="font-size: 20px" class="my-5">
+				Create your own soundboard with UniversalSoundboard!
+				<br>Add and play your sounds or your music collection. Sort your sounds in categories and set your preferred sounds as favourites to keep track of your collection.
+				<br><br>You can log in with your dav Account to use the same soundboard on all your devices.
+			</p>
+
+			<a href='https://play.google.com/store/apps/details?id=app.dav.universalsoundboard&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1' target="blank"><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' class="google-play-badge" /></a>
+			<a href='//www.microsoft.com/store/apps/9NBLGGH51005?cid=storebadge&ocid=badge' target="blank" class="mx-2"><img src='https://assets.windowsphone.com/85864462-9c82-451e-9355-a3d5f874397a/English_get-it-from-MS_InvariantCulture_Default.png' alt='English badge' class="microsoft-store-badge" /></a>
+			<a href='https://github.com/Dav2070/UniversalSoundboard' target="blank" class="mx-2"><%= image_tag "GitHub-Mark-64px.png", class: "github-badge" %></a>
 		</div>
 	</div>
 </div>
@@ -50,6 +79,7 @@
 		document.getElementById("start-header").setAttribute("style", "height: " + window.innerHeight * 0.7 + "px;");
 		document.getElementById("start-header-text").setAttribute("style", "margin-left: " + window.innerWidth * 0.1 + "px; padding: 20px; width: 300px; color: white;");
 		document.getElementById("start-calendo-screenshot").setAttribute("width", window.innerWidth * 0.3);
+		document.getElementById("start-universalsoundboard-screenshot").setAttribute("width", window.innerWidth * 0.5);
 	}
 
 	window.addEventListener('resize', resize);

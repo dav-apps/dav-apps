@@ -57,7 +57,18 @@
 	background-image: asset_url("start-background.jpg");
 	background-size: cover;
 	background-repeat: no-repeat;
-   //background-position: left;
 	width: 100%;
 	min-height: 400px;
+}
+
+.google-play-badge{
+   height: 70px;
+}
+
+.microsoft-store-badge{
+   height: 48px;
+}
+
+.github-badge{
+   height: 50px;
 }
