@@ -1,6 +1,7 @@
 $(function(){
    // Collapse now if page is not at top
-   navbarCollapse();
+	navbarCollapse();
+	onSizeChange();
    // Collapse the navbar when page is scrolled
    $(window).scroll(navbarCollapse);
 	$(window).on('resize', onSizeChange);

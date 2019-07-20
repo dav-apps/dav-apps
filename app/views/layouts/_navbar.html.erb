@@ -7,12 +7,12 @@
       
       <div class="collapse navbar-collapse" id="navbarResponsive">
          <ul id="navbar-list" class="navbar-nav ml-auto">
-            <li class="nav-item">
-               <%= link_to "All Apps", apps_path, class: "nav-link navigation-text" %>
-            </li>
             <% if session[:jwt] %>
 
             <!-- Logged in -->
+            <li class="nav-item">
+               <%= link_to "All Apps", apps_path, class: "nav-link navigation-text" %>
+            </li>
             <li class="nav-item">
                <%= link_to session[:username], user_path, class: "nav-link navigation-text" %>
             </li>
