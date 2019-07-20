@@ -25,7 +25,7 @@
 
 <div class="container-fluid" style="padding: 0px" onresize="resize()">
 	<div id="start-header" class="d-flex parallax">
-		<div class="acrylic align-self-center" style="margin-left: 50px; padding: 20px; width: 300px; color: white;">
+		<div id="start-header-text" class="acrylic align-self-center">
 			<h4>dav is a new platform of connected services</h4>
 		</div>
 	</div>
@@ -35,7 +35,8 @@
 
 <script>
 	resize = function(){
-		document.getElementById("start-header").setAttribute("style", "height: " + window.outerHeight * 0.7 + "px;");
+		document.getElementById("start-header").setAttribute("style", "height: " + window.innerHeight * 0.7 + "px;");
+      document.getElementById("start-header-text").setAttribute("style", "margin-left: " + window.innerWidth * 0.1 + "px; padding: 20px; width: 300px; color: white;");
 	}
 
 	window.addEventListener('resize', resize);

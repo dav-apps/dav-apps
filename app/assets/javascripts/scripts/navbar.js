@@ -3,17 +3,25 @@ $(function(){
    navbarCollapse();
    // Collapse the navbar when page is scrolled
    $(window).scroll(navbarCollapse);
-   $(window).on('resize', onSizeChange);
+	$(window).on('resize', onSizeChange);
 });
 
 function navbarCollapse(){
    if ($("#mainNav").offset().top > 100) {
-      $("#mainNav").css("background-color", "rgba(255, 255, 255, 0.87)");
+      $("#mainNav").addClass("acrylic light shadow");
    } else {
-      $("#mainNav").css("background-color", "transparent");
+      $("#mainNav").removeClass("acrylic light shadow");
    }
 };
 
 function onSizeChange(){
-   $('.navbar-collapse').collapse('hide');
+	$('.navbar-collapse').collapse('hide');
+	
+	if(window.innerWidth > 575){
+		// Remove classes from navbar list to remove the acrylic
+		$("#navbar-list").removeClass("acrylic light shadow");
+	}else{
+		// Add classes to navbar list to make it acrylic
+		$("#navbar-list").addClass("acrylic light shadow");
+	}
 }

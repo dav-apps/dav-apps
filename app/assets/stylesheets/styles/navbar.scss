@@ -1,5 +1,3 @@
-$navbar-background-color: rgba(255, 255, 255, 0.87);
-
 #navbar-brand{
    color:black;
    font-size:35px;
@@ -27,12 +25,8 @@ $navbar-background-color: rgba(255, 255, 255, 0.87);
 }
 
 #mainNav{
-   -webkit-transition:background 0.3s;
-   -moz-transition:background 0.3s;
-   -o-transition:background 0.3s;
-   transition:background 0.3s;
-}
-
-.collapsing, .collapse.show{
-   background-color: $navbar-background-color;
+   -webkit-transition: all 0.3s;
+   -moz-transition: all 0.3s;
+   -o-transition: all 0.3s;
+   transition: all 0.3s;
 }
