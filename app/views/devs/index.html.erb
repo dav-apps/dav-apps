@@ -4,7 +4,7 @@
    <div class="row justify-content-center mt-4">
       <% @dev.apps.each do |app| %>
          <div class="card bg-light mb-3 col-12" style="max-width: 20rem; margin: 5px">
-            <%= link_to show_app_path(app.id), class: "no-link-deco" do %>
+            <%= link_to show_app_path(app.id), class: "no-link-deco text-dark" do %>
                <div class="card-body row">
                   <h4 class="card-title mx-auto my-2"><%= app.name %></h4>
                </div>

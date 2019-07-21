@@ -9,7 +9,7 @@
    <h2 class="mt-3">Tables</h2>
    <div class="list-group">
 		<% @app.tables.each do |table| %>
-			<%= link_to table.name, show_table_path(name: table.name), class: "list-group-item list-group-item-action" %>
+			<%= link_to table.name, show_table_path(name: table.name), class: "list-group-item list-group-item-action text-dark" %>
 		<% end %>
 		<p class="list-group-item list-group-item-action" style="font-weight: bold;" data-toggle="modal" data-target="#create-table-modal">+</p>
    </div>
@@ -17,7 +17,7 @@
 	<!-- Events -->
 	<h2 class="mt-3">Events</h2>
 	<% @app.events.each do |event| %>
-		<%= link_to event.name, show_event_path(name: event.name), class: "list-group-item list-group-item-action" %>
+		<%= link_to event.name, show_event_path(name: event.name), class: "list-group-item list-group-item-action text-dark" %>
 	<% end %>
 
 	<%= link_to "General information", show_general_app_path, class: "btn btn-secondary mx-auto mt-3" %>
