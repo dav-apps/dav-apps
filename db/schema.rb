@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180104192227) do
+ActiveRecord::Schema.define(version: 2018_01_04_192227) do
 
   create_table "sessions", force: :cascade do |t|
     t.string "session_id", null: false
